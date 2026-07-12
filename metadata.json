@@ -1,0 +1,6 @@
+{
+  "name": "Financial Literacy Academy",
+  "description": "An interactive, gamified financial literacy learning platform with 10 modules for middle school students, featuring dynamic simulations, progress tracking, and an AI guide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
