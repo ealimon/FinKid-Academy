@@ -431,23 +431,23 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-dashed border-sky-100 pb-5 gap-4 print:pb-3">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-widest bg-sky-100 text-sky-700 px-3 py-1 rounded-full print:bg-transparent print:p-0">
+          <span className="text-xs font-black uppercase tracking-widest bg-sky-100 text-sky-700 px-3 py-1 rounded-full print:bg-transparent print:p-0">
             {moduleCategory} Worksheet
           </span>
           <h2 className="text-xl font-black text-sky-950 mt-1 font-display print:text-lg">{moduleTitle}</h2>
-          <p className="text-xs text-sky-500 font-bold font-display print:text-[10px]">{moduleSubtitle}</p>
+          <p className="text-sm text-sky-500 font-bold font-display print:text-[10px]">{moduleSubtitle}</p>
         </div>
         <div className="flex items-center gap-2 print:hidden shrink-0">
           <button
             onClick={() => setShowAnswerKey(!showAnswerKey)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-black text-sm transition-colors"
           >
             {showAnswerKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
             {showAnswerKey ? "Hide Answers" : "Answer Key"}
           </button>
           <button
             onClick={handlePrint}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs shadow-md transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-black text-sm shadow-md transition-all active:scale-95"
           >
             <Printer className="w-3.5 h-3.5" />
             Print
@@ -458,19 +458,19 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
       {/* Classroom header inputs for printing */}
       <div className="grid grid-cols-2 gap-4 bg-sky-50/50 p-4 rounded-2xl border border-sky-100/50 print:bg-transparent print:border-gray-300 print:py-2">
         <div className="space-y-1">
-          <label className="text-[9px] font-black uppercase text-sky-600 font-display print:text-gray-500">Student Name:</label>
+          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-gray-500">Student Name:</label>
           <input
             type="text"
             placeholder="Write name here..."
-            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-xs font-bold text-sky-950 placeholder:text-slate-300 focus:outline-sky-400 print:border-b print:border-t-0 print:border-x-0 print:rounded-none print:p-0"
+            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 placeholder:text-slate-300 focus:outline-sky-400 print:border-b print:border-t-0 print:border-x-0 print:rounded-none print:p-0"
           />
         </div>
         <div className="space-y-1">
-          <label className="text-[9px] font-black uppercase text-sky-600 font-display print:text-gray-500">Date:</label>
+          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-gray-500">Date:</label>
           <input
             type="text"
             defaultValue={new Date().toLocaleDateString()}
-            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-xs font-bold text-sky-950 focus:outline-sky-400 print:border-b print:border-t-0 print:border-x-0 print:rounded-none print:p-0"
+            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 focus:outline-sky-400 print:border-b print:border-t-0 print:border-x-0 print:rounded-none print:p-0"
           />
         </div>
       </div>
@@ -481,8 +481,8 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
           const isCorrect = checkedAnswers[q.id];
           return (
             <div key={q.id} className="space-y-2.5 print:break-inside-avoid">
-              <p className="text-xs font-black text-sky-950 leading-relaxed font-display flex gap-2">
-                <span className="bg-sky-100 text-sky-800 w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-[10px]">
+              <p className="text-sm sm:text-base font-black text-sky-950 leading-relaxed font-display flex gap-2">
+                <span className="bg-sky-100 text-sky-800 w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-xs font-black">
                   Q{idx + 1}
                 </span>
                 {q.question}
@@ -496,7 +496,7 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
                       <button
                         key={opt}
                         onClick={() => handleInputChange(q.id, opt)}
-                        className={`text-left px-4 py-2 rounded-xl text-xs font-semibold border-2 transition-all print:border print:bg-transparent ${
+                        className={`text-left px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all print:border print:bg-transparent ${
                           isSelected
                             ? "bg-sky-100 border-sky-400 text-sky-900 font-bold"
                             : "bg-slate-50 hover:bg-slate-100 border-slate-100 text-slate-600"
@@ -514,14 +514,14 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
                     value={answers[q.id] || ""}
                     onChange={(e) => handleInputChange(q.id, e.target.value)}
                     placeholder="Type your answer explanation here..."
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-xs font-medium text-slate-700 placeholder:text-slate-300 focus:outline-sky-400 print:border print:bg-white print:p-2"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-sky-400 print:border print:bg-white print:p-2"
                   />
                 </div>
               )}
 
               {/* Verified Feedback / Success marker */}
               {celebrated && answers[q.id] && (
-                <div className="pl-7 flex items-center gap-1.5 text-[10px] font-black">
+                <div className="pl-7 flex items-center gap-1.5 text-xs font-black">
                   {isCorrect ? (
                     <span className="text-emerald-600 flex items-center gap-1">
                       <CheckCircle className="w-3.5 h-3.5" /> Checked! Stellar analysis.
@@ -540,12 +540,12 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
 
               {/* Answer Key Override */}
               {(showAnswerKey || (celebrated && !isCorrect && q.type === "choice")) && (
-                <div className="pl-7 pr-4 py-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 space-y-1 print:bg-transparent print:border-gray-200">
+                <div className="pl-7 pr-4 py-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-sm text-emerald-800 space-y-1 print:bg-transparent print:border-gray-200">
                   <p className="font-extrabold flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     Correct Key: <span className="font-black underline">{q.correctAnswer}</span>
                   </p>
-                  <p className="text-[10px] text-emerald-700/95 font-medium leading-normal">
+                  <p className="text-xs text-emerald-700/95 font-medium leading-normal">
                     {q.explanation}
                   </p>
                 </div>
@@ -559,7 +559,7 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
       <div className="border-t border-slate-100 pt-5 flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
         <button
           onClick={handleCheckAnswers}
-          className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-black px-6 py-3 rounded-2xl shadow-lg shadow-emerald-200 hover:shadow-xl transition-all active:scale-95 text-xs uppercase tracking-wider font-display"
+          className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-black px-6 py-3 rounded-2xl shadow-lg shadow-emerald-200 hover:shadow-xl transition-all active:scale-95 text-sm uppercase tracking-wider font-display"
         >
           Verify & Submit Worksheet
         </button>
@@ -567,7 +567,7 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
         {celebrated && (
           <div className="flex items-center gap-2 bg-yellow-100 border border-yellow-200 px-4 py-2 rounded-2xl animate-bounce">
             <span className="text-lg">🙌</span>
-            <span className="font-black text-yellow-800 text-xs font-display">
+            <span className="font-black text-yellow-800 text-sm font-display">
               Double High Five! Awarded 10 Fin-Coins!
             </span>
           </div>

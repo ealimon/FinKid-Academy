@@ -170,8 +170,8 @@ export default function FinnyChat() {
               <div className="flex items-center gap-3">
                 <span className="text-3xl">🦉</span>
                 <div>
-                  <h3 className="font-bold text-sm tracking-wide">Finny the Wise Owl</h3>
-                  <div className="flex items-center gap-1.5 text-xs text-amber-100 font-medium">
+                  <h3 className="font-bold text-base tracking-wide">Finny the Wise Owl</h3>
+                  <div className="flex items-center gap-1.5 text-sm text-amber-100 font-medium">
                     <Sparkles className="w-3.5 h-3.5 animate-pulse text-yellow-200" />
                     AI Money Guide • Online
                   </div>
@@ -208,7 +208,7 @@ export default function FinnyChat() {
                 <div className="flex justify-start">
                   <div className="bg-white border border-slate-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex items-center gap-2">
                     <span className="text-lg animate-bounce">🦉</span>
-                    <span className="text-xs text-slate-400 font-medium italic">Finny is writing...</span>
+                    <span className="text-sm text-slate-400 font-medium italic">Finny is writing...</span>
                   </div>
                 </div>
               )}
@@ -218,7 +218,7 @@ export default function FinnyChat() {
             {/* Quick Suggestions */}
             {messages.length === 1 && (
               <div className="p-3 border-t border-slate-100 bg-white space-y-1.5">
-                <p className="text-xs text-slate-400 font-medium px-1 flex items-center gap-1">
+                <p className="text-sm text-slate-400 font-bold px-1 flex items-center gap-1">
                   <Sparkle className="w-3 h-3 text-amber-500" /> Suggestions:
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -227,7 +227,7 @@ export default function FinnyChat() {
                       key={prompt}
                       id={`suggest-${prompt.replace(/\s+/g, '-').toLowerCase()}`}
                       onClick={() => handleSendMessage(prompt)}
-                      className="text-xs bg-slate-100 hover:bg-amber-50 text-slate-600 hover:text-amber-700 font-medium px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-amber-200 transition-all text-left"
+                      className="text-sm bg-slate-100 hover:bg-amber-50 text-slate-600 hover:text-amber-700 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-amber-200 transition-all text-left"
                     >
                       {prompt}
                     </button>

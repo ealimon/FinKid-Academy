@@ -509,21 +509,21 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
       {/* Simulation Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200">
         <div>
-          <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span className="text-sm font-black text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase tracking-wider">
             Module {module.id.replace("m", "")} Interactive Game
           </span>
           <h2 className="text-xl font-bold text-slate-800 mt-1">{module.title}</h2>
-          <p className="text-xs text-slate-500">{module.subtitle}</p>
+          <p className="text-sm text-slate-500 font-semibold">{module.subtitle}</p>
         </div>
         <div className="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
           <div className="text-center px-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase">XP Reward</p>
-            <p className="font-bold text-sm text-blue-600">+{module.xpReward} XP</p>
+            <p className="text-xs font-black text-slate-400 uppercase">XP Reward</p>
+            <p className="font-bold text-base text-blue-600">+{module.xpReward} XP</p>
           </div>
           <div className="h-6 w-[1px] bg-slate-200" />
           <div className="text-center px-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase">Coins Reward</p>
-            <p className="font-bold text-sm text-yellow-500">+{module.coinReward} Coins</p>
+            <p className="text-xs font-black text-slate-400 uppercase">Coins Reward</p>
+            <p className="font-bold text-base text-yellow-500">+{module.coinReward} Coins</p>
           </div>
         </div>
       </div>
@@ -535,7 +535,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
           <div className="space-y-6">
             <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-100 flex items-start gap-3">
               <span className="text-2xl">💡</span>
-              <p className="text-xs text-amber-800 leading-relaxed font-medium">
+              <p className="text-sm text-amber-800 leading-relaxed font-semibold">
                 <strong>Bartering Goal:</strong> Trade your farm's fresh <strong>Apples 🍎</strong> through villagers who want different items until you can get the <strong>Skateboard 🛹</strong>. This demonstrates why Cash is so much simpler than trading goods directly!
               </p>
             </div>
@@ -560,13 +560,13 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                     {gameState.step === 1 && (
                       <div className="bg-slate-50 hover:bg-amber-50/50 p-3.5 rounded-xl border border-slate-100 flex justify-between items-center transition-all">
                         <div>
-                          <p className="text-xs font-semibold text-slate-700">Villager Albie</p>
-                          <p className="text-[11px] text-slate-500">Wants: Apples 🍎 | Offers: Baseball Card ⚾</p>
+                          <p className="text-sm font-bold text-slate-700">Villager Albie</p>
+                          <p className="text-xs text-slate-500 font-semibold">Wants: Apples 🍎 | Offers: Baseball Card ⚾</p>
                         </div>
                         <button
                           id="barter-trade-1"
                           onClick={() => handleBarterTrade("Apples 🍎", "Apples 🍎", "Albie", "Baseball Card ⚾")}
-                          className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+                          className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg transition-all"
                         >
                           Trade
                         </button>
@@ -575,13 +575,13 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                     {gameState.step === 2 && gameState.inventory?.includes("Baseball Card ⚾") && (
                       <div className="bg-slate-50 hover:bg-amber-50/50 p-3.5 rounded-xl border border-slate-100 flex justify-between items-center transition-all">
                         <div>
-                          <p className="text-xs font-semibold text-slate-700">Villager Beatrice</p>
-                          <p className="text-[11px] text-slate-500">Wants: Baseball Card ⚾ | Offers: Guitar 🎸</p>
+                          <p className="text-sm font-bold text-slate-700">Villager Beatrice</p>
+                          <p className="text-xs text-slate-500 font-semibold">Wants: Baseball Card ⚾ | Offers: Guitar 🎸</p>
                         </div>
                         <button
                           id="barter-trade-2"
                           onClick={() => handleBarterTrade("Baseball Card ⚾", "Baseball Card ⚾", "Beatrice", "Guitar 🎸")}
-                          className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+                          className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg transition-all"
                         >
                           Trade
                         </button>
@@ -590,20 +590,20 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                     {gameState.step === 3 && gameState.inventory?.includes("Guitar 🎸") && (
                       <div className="bg-slate-50 hover:bg-amber-50/50 p-3.5 rounded-xl border border-slate-100 flex justify-between items-center transition-all">
                         <div>
-                          <p className="text-xs font-semibold text-slate-700">Villager Casey</p>
-                          <p className="text-[11px] text-slate-500">Wants: Guitar 🎸 | Offers: Skateboard 🛹</p>
+                          <p className="text-sm font-bold text-slate-700">Villager Casey</p>
+                          <p className="text-xs text-slate-500 font-semibold">Wants: Guitar 🎸 | Offers: Skateboard 🛹</p>
                         </div>
                         <button
                           id="barter-trade-3"
                           onClick={() => handleBarterTrade("Guitar 🎸", "Guitar 🎸", "Casey", "Skateboard 🛹")}
-                          className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+                          className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg transition-all"
                         >
                           Trade
                         </button>
                       </div>
                     )}
                     {gameState.inventory?.includes("Skateboard 🛹") && (
-                      <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl border border-emerald-100 text-xs font-medium text-center">
+                      <div className="bg-emerald-50 text-emerald-800 p-4 rounded-xl border border-emerald-100 text-sm font-bold text-center">
                         🎉 Whooo-ray! You got the Skateboard! You completed the barter chain.
                       </div>
                     )}
@@ -631,7 +631,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                     </p>
                   ))}
                 </div>
-                <p className="text-[10px] text-slate-400 border-t border-slate-800 pt-3 italic">
+                <p className="text-xs text-slate-400 border-t border-slate-800 pt-3 italic font-semibold">
                   See how many steps that took? With Cash, you could buy the Skateboard instantly!
                 </p>
               </div>
@@ -706,17 +706,17 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   <div className="border-b border-dashed border-slate-200 pb-3 flex justify-between items-center">
                     <div>
                       <h3 className="font-bold text-slate-800 text-sm">VIRTUAL PAYSTUB</h3>
-                      <p className="text-[10px] text-slate-400">Employee: Future Wealth Builder</p>
+                      <p className="text-xs text-slate-400 font-semibold">Employee: Future Wealth Builder</p>
                     </div>
                     <span className="text-lg">💰</span>
                   </div>
 
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between font-medium text-slate-600">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between font-semibold text-slate-600">
                       <span>Job Role</span>
                       <span className="font-bold text-slate-800">{gameState.selectedJob?.name}</span>
                     </div>
-                    <div className="flex justify-between font-medium text-slate-600">
+                    <div className="flex justify-between font-semibold text-slate-600">
                       <span>Hours Worked</span>
                       <span className="font-bold text-slate-800">8.0 hrs</span>
                     </div>
@@ -725,7 +725,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                       <span>Gross Pay (Earnings)</span>
                       <span>${gameState.earnings}</span>
                     </div>
-                    <div className="flex justify-between font-medium text-red-500 bg-red-50 px-2.5 py-1.5 rounded-lg mt-2">
+                    <div className="flex justify-between font-bold text-red-500 bg-red-50 px-2.5 py-1.5 rounded-lg mt-2">
                       <span>Deduction: Taxes (20%)</span>
                       <span>-${gameState.taxDeducted}</span>
                     </div>
@@ -736,7 +736,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg text-[11px] text-blue-800 leading-relaxed font-medium">
+                  <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg text-sm text-blue-800 leading-relaxed font-semibold">
                     🔍 <strong>Take-Home Lesson:</strong> See how your paycheck gets smaller? Gross pay is the total you earned. Net pay is what you keep after Taxes are deducted to pay for public libraries, roads, and fire departments!
                   </div>
                 </div>
@@ -1270,12 +1270,12 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                 {/* ATM simulator */}
                 <div className="bg-slate-800 text-white rounded-2xl p-6 border-4 border-slate-600 max-w-sm mx-auto shadow-xl font-mono text-center space-y-4">
                   <div className="bg-green-950 text-emerald-400 p-4 rounded-lg border border-green-800 min-h-[100px] flex flex-col justify-between text-left shadow-inner">
-                    <p className="text-[10px] text-emerald-500 font-bold">ATM TERMINAL #808</p>
+                    <p className="text-xs text-emerald-500 font-bold">ATM TERMINAL #808</p>
                     <div className="my-2">
-                      <p className="text-xs">Checking: <span className="font-bold">${gameState.checkingBalance}</span></p>
-                      <p className="text-xs">Cash Wallet: <span className="font-bold">${gameState.cashWallet}</span></p>
+                      <p className="text-sm font-semibold">Checking: <span className="font-bold">${gameState.checkingBalance}</span></p>
+                      <p className="text-sm font-semibold">Cash Wallet: <span className="font-bold">${gameState.cashWallet}</span></p>
                     </div>
-                    <p className="text-[10px] text-emerald-600 italic">
+                    <p className="text-xs text-emerald-600 italic">
                       {gameState.atmStage === "insert" && "Check deposited! Insert Card to access."}
                       {gameState.atmStage === "withdraw" && "Cash deposit available. Select Action below."}
                       {gameState.atmStage === "done" && "Withdrawal successful! Receipt issued."}
@@ -1303,7 +1303,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                       </button>
                     )}
                     {gameState.atmStage === "done" && (
-                      <div className="bg-green-900/30 text-emerald-400 p-3 rounded-lg border border-green-800 text-[10px] leading-relaxed text-left">
+                      <div className="bg-green-900/30 text-emerald-400 p-3 rounded-lg border border-green-800 text-xs leading-relaxed text-left font-semibold">
                         🎉 Perfect! You successfully deposited a check, deposited cash, and made an ATM withdrawal. You understand standard banking transactions!
                       </div>
                     )}
@@ -1468,7 +1468,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                 <strong>🚀 Stock Market Sim:</strong> Trade company shares, read the news events, and try to make a profit! Spreading your money across different companies is called <strong>Diversification</strong>.
               </div>
               <div className="bg-white border border-indigo-200 px-3 py-2 rounded-lg text-center shrink-0">
-                <p className="text-[9px] text-slate-400 uppercase font-black">YOUR CAPITAL</p>
+                <p className="text-xs text-slate-400 uppercase font-black">YOUR CAPITAL</p>
                 <p className="text-sm font-black text-indigo-600">${gameState.portfolioValue}</p>
               </div>
             </div>
@@ -1489,10 +1489,10 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                         <div key={stock.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 hover:bg-slate-100/50 p-3 rounded-xl border border-slate-100 gap-3">
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-black text-slate-800 text-xs">{stock.name} ({stock.symbol})</span>
-                              <span className="text-[10px] bg-slate-200 text-slate-600 font-bold px-1.5 py-0.5 rounded">Owned: {shareCount}</span>
+                              <span className="font-black text-slate-800 text-sm">{stock.name} ({stock.symbol})</span>
+                              <span className="text-xs bg-slate-200 text-slate-600 font-bold px-1.5 py-0.5 rounded">Owned: {shareCount}</span>
                             </div>
-                            <p className="text-[10px] text-slate-400 mt-0.5">{stock.description}</p>
+                            <p className="text-xs text-slate-400 mt-0.5 font-semibold">{stock.description}</p>
                           </div>
 
                           <div className="flex items-center gap-4 self-end sm:self-center">
@@ -1502,7 +1502,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                                 id={`buy-${stock.symbol.toLowerCase()}`}
                                 disabled={gameState.cash < stock.price}
                                 onClick={() => buyStock(stock.id, stock.price)}
-                                className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-200 text-white font-bold p-1 rounded-lg text-[10px] transition-all flex items-center justify-center w-6 h-6"
+                                className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-200 text-white font-bold p-1 rounded-lg text-xs transition-all flex items-center justify-center w-6 h-6"
                               >
                                 +
                               </button>
@@ -1510,7 +1510,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                                 id={`sell-${stock.symbol.toLowerCase()}`}
                                 disabled={shareCount <= 0}
                                 onClick={() => sellStock(stock.id, stock.price)}
-                                className="bg-rose-500 hover:bg-rose-600 disabled:bg-slate-200 text-white font-bold p-1 rounded-lg text-[10px] transition-all flex items-center justify-center w-6 h-6"
+                                className="bg-rose-500 hover:bg-rose-600 disabled:bg-slate-200 text-white font-bold p-1 rounded-lg text-xs transition-all flex items-center justify-center w-6 h-6"
                               >
                                 -
                               </button>
@@ -1581,7 +1581,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   <div className="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <div>
                       <p className="font-bold text-slate-700">📚 Public Schools</p>
-                      <p className="text-[10px] text-slate-400">Funds textbooks, desks, and schools ($100)</p>
+                      <p className="text-xs text-slate-400 font-semibold">Funds textbooks, desks, and schools ($100)</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -1608,7 +1608,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   <div className="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <div>
                       <p className="font-bold text-slate-700">🌲 City Parks & Trees</p>
-                      <p className="text-[10px] text-slate-400">Plants local trees and playgrounds ($50)</p>
+                      <p className="text-xs text-slate-400 font-semibold">Plants local trees and playgrounds ($50)</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -1635,7 +1635,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   <div className="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <div>
                       <p className="font-bold text-slate-700">🛣️ Roads & Bridges</p>
-                      <p className="text-[10px] text-slate-400">Repairs potholes and city highways ($50)</p>
+                      <p className="text-xs text-slate-400 font-semibold">Repairs potholes and city highways ($50)</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -1662,7 +1662,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   <div className="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <div>
                       <p className="font-bold text-slate-700">🚒 Fire & Safety</p>
-                      <p className="text-[10px] text-slate-400">Supports engines and fire protection ($50)</p>
+                      <p className="text-xs text-slate-400 font-semibold">Supports engines and fire protection ($50)</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -1689,7 +1689,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
 
               {/* Visual City sandbox */}
               <div className="bg-slate-900 border-2 border-slate-800 rounded-xl p-5 shadow-inner flex flex-col items-center justify-center text-center space-y-4 text-white min-h-[250px] relative">
-                <span className="text-[10px] font-black tracking-widest text-slate-400 uppercase absolute top-4 left-4">City Grid</span>
+                <span className="text-xs font-black tracking-widest text-slate-400 uppercase absolute top-4 left-4">City Grid</span>
                 
                 <div className="grid grid-cols-2 gap-4 w-full max-w-[200px]">
                   <div className={`p-4 rounded-xl border border-slate-800/80 transition-all ${gameState.allocated?.schools > 0 ? "bg-blue-900/40 border-blue-500 text-2xl" : "bg-slate-800/20 text-slate-600 text-xl"}`}>
@@ -1706,7 +1706,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   </div>
                 </div>
 
-                <p className="text-[10px] text-slate-400 italic">
+                <p className="text-xs text-slate-400 italic">
                   {gameState.remainingTax === 0 
                     ? "🎉 Fantastic! All tax dollars invested! The city is fully funded and prosperous!"
                     : `Please allocate the remaining $${gameState.remainingTax} tax dollars.`}
@@ -1739,21 +1739,21 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                 <span className="text-4xl">🐶</span>
                 <div>
                   <h4 className="font-bold text-slate-800 text-sm">Animal Shelter</h4>
-                  <p className="text-[11px] text-slate-500">Rescues puppies and kitties.</p>
+                  <p className="text-xs text-slate-500 font-semibold">Rescues puppies and kitties.</p>
                   <p className="text-xs font-bold text-pink-600 mt-2">Donated: {gameState.shelterDonated || 0} Coins</p>
                 </div>
                 <div className="flex gap-1">
                   <button
                     id="donate-shelter-20"
                     onClick={() => donateCoins("shelter", 20)}
-                    className="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 text-[10px] font-bold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 text-xs font-black py-1.5 rounded-lg transition-all"
                   >
                     Give 20 🪙
                   </button>
                   <button
                     id="donate-shelter-50"
                     onClick={() => donateCoins("shelter", 50)}
-                    className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-[10px] font-bold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-xs font-black py-1.5 rounded-lg transition-all"
                   >
                     Give 50 🪙
                   </button>
@@ -1765,21 +1765,21 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                 <span className="text-4xl">🍎</span>
                 <div>
                   <h4 className="font-bold text-slate-800 text-sm">Community Food Bank</h4>
-                  <p className="text-[11px] text-slate-500">Feeds families in need.</p>
+                  <p className="text-xs text-slate-500 font-semibold">Feeds families in need.</p>
                   <p className="text-xs font-bold text-pink-600 mt-2">Donated: {gameState.foodBankDonated || 0} Coins</p>
                 </div>
                 <div className="flex gap-1">
                   <button
                     id="donate-food-20"
                     onClick={() => donateCoins("foodBank", 20)}
-                    className="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 text-[10px] font-bold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 text-xs font-black py-1.5 rounded-lg transition-all"
                   >
                     Give 20 🪙
                   </button>
                   <button
                     id="donate-food-50"
                     onClick={() => donateCoins("foodBank", 50)}
-                    className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-[10px] font-bold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-xs font-black py-1.5 rounded-lg transition-all"
                   >
                     Give 50 🪙
                   </button>
@@ -1791,21 +1791,21 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                 <span className="text-4xl">🌲</span>
                 <div>
                   <h4 className="font-bold text-slate-800 text-sm">Eco Conservation</h4>
-                  <p className="text-[11px] text-slate-500">Plants trees and saves wildlife.</p>
+                  <p className="text-xs text-slate-500 font-semibold">Plants trees and saves wildlife.</p>
                   <p className="text-xs font-bold text-pink-600 mt-2">Donated: {gameState.forestDonated || 0} Coins</p>
                 </div>
                 <div className="flex gap-1">
                   <button
                     id="donate-eco-20"
                     onClick={() => donateCoins("forest", 20)}
-                    className="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 text-[10px] font-bold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-100 hover:bg-pink-200 text-pink-700 text-xs font-black py-1.5 rounded-lg transition-all"
                   >
                     Give 20 🪙
                   </button>
                   <button
                     id="donate-eco-50"
                     onClick={() => donateCoins("forest", 50)}
-                    className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-[10px] font-bold py-1.5 rounded-lg transition-all"
+                    className="flex-1 bg-pink-500 hover:bg-pink-600 text-white text-xs font-black py-1.5 rounded-lg transition-all"
                   >
                     Give 50 🪙
                   </button>

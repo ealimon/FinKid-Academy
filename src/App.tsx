@@ -12,6 +12,7 @@ import ModuleQuiz from "./components/ModuleQuiz";
 import AvatarCustomizer from "./components/AvatarCustomizer";
 import FinnyChat from "./components/FinnyChat";
 import ModuleWorksheet from "./components/ModuleWorksheet";
+import StreakModal from "./components/StreakModal";
 
 const STORAGE_KEY = "finance_quest_academy_progress";
 
@@ -22,7 +23,11 @@ const DEFAULT_PROGRESS: UserProgress = {
   completedModules: [],
   badges: [],
   unlockedAvatarItems: [],
-  equippedAvatarItems: {}
+  equippedAvatarItems: {},
+  streakCount: 3,
+  longestStreak: 5,
+  streakFreezes: 1,
+  streakCalendar: ["Mon", "Tue", "Wed"]
 };
 
 export default function App() {
@@ -31,6 +36,7 @@ export default function App() {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>("m1");
   const [workspaceTab, setWorkspaceTab] = useState<"game" | "worksheet">("game");
   const [moduleStage, setModuleStage] = useState<"intro" | "game" | "quiz" | "complete">("intro");
+  const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
 
   // Load progress from LocalStorage on mount
   useEffect(() => {
@@ -104,12 +110,50 @@ export default function App() {
       ? progress.badges 
       : [...progress.badges, activeModule.badge.id];
 
-    handleEarnRewards(activeModule.coinReward, activeModule.xpReward);
+    // Streak logic when mastering a lesson
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const todayName = days[new Date().getDay()];
+    const currentCalendar = progress.streakCalendar ?? ["Mon", "Tue", "Wed"];
+    
+    let updatedCalendar = [...currentCalendar];
+    let updatedStreakCount = progress.streakCount ?? 3;
+    let updatedLongest = progress.longestStreak ?? 5;
+    let milestoneCoins = 0;
+
+    if (!updatedCalendar.includes(todayName)) {
+      updatedCalendar.push(todayName);
+      updatedStreakCount += 1;
+      updatedLongest = Math.max(updatedStreakCount, updatedLongest);
+
+      if (updatedStreakCount === 4) {
+        milestoneCoins = 30;
+      } else if (updatedStreakCount === 7) {
+        milestoneCoins = 100;
+      } else if (updatedStreakCount === 14) {
+        milestoneCoins = 250;
+      }
+    }
+
+    // Accumulate rewards
+    let newXp = progress.xp + activeModule.xpReward;
+    let newCoins = progress.coins + activeModule.coinReward + milestoneCoins;
+    let newLevel = progress.level;
+
+    while (newXp >= getXpThreshold(newLevel)) {
+      newXp -= getXpThreshold(newLevel);
+      newLevel += 1;
+    }
     
     saveProgress({
       ...progress,
+      xp: newXp,
+      coins: newCoins,
+      level: newLevel,
       completedModules: updatedCompleted,
-      badges: updatedBadges
+      badges: updatedBadges,
+      streakCount: updatedStreakCount,
+      longestStreak: updatedLongest,
+      streakCalendar: updatedCalendar
     });
 
     setModuleStage("complete");
@@ -132,7 +176,7 @@ export default function App() {
                 FINKID ACADEMY
                 <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
               </h1>
-              <p className="text-xs font-bold text-sky-400 uppercase tracking-widest font-display">Adventure Mode</p>
+              <p className="text-sm font-black text-sky-400 uppercase tracking-widest font-display">Adventure Mode</p>
             </div>
           </div>
 
@@ -142,7 +186,7 @@ export default function App() {
             {/* Level & XP */}
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-black text-sky-800 uppercase font-display">Lvl {progress.level}</span>
+                <span className="text-sm font-black text-sky-800 uppercase font-display">Lvl {progress.level}</span>
                 <div className="w-48 h-3 bg-sky-100 rounded-full overflow-hidden border-2 border-sky-50">
                   <div 
                     className="h-full bg-gradient-to-r from-green-400 to-emerald-400 transition-all duration-500" 
@@ -150,22 +194,29 @@ export default function App() {
                   />
                 </div>
               </div>
-              <p className="text-[10px] font-bold text-sky-400 font-mono">{progress.xp} / {getXpThreshold(progress.level)} XP</p>
+              <p className="text-xs font-bold text-sky-400 font-mono">{progress.xp} / {getXpThreshold(progress.level)} XP</p>
             </div>
 
             {/* Coins Balance */}
             <div className="flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-2xl border-2 border-yellow-200 shadow-sm">
               <span className="text-lg">🪙</span>
-              <span className="font-black text-yellow-700 font-display text-sm">{progress.coins} Coins</span>
+              <span className="font-black text-yellow-700 font-display text-base">{progress.coins} Coins</span>
             </div>
 
             {/* Streak count 🔥 */}
-            <div className="flex items-center gap-2 bg-rose-100 px-4 py-2 rounded-2xl border-2 border-rose-200 shadow-sm">
-              <span className="text-lg">🔥</span>
-              <span className="font-black text-rose-700 font-display text-sm">
-                {progress.completedModules.length * 2 + 3} Days
+            <button
+              id="streak-header-btn"
+              onClick={() => setIsStreakModalOpen(true)}
+              className="flex items-center gap-2 bg-rose-100 px-4 py-2 rounded-2xl border-2 border-rose-200 shadow-sm hover:bg-rose-200/80 active:scale-95 transition-all cursor-pointer relative group"
+            >
+              <span className="text-lg animate-pulse">🔥</span>
+              <span className="font-black text-rose-700 font-display text-base">
+                {progress.streakCount ?? 3} Days
               </span>
-            </div>
+              <span className="absolute -bottom-8 right-0 bg-rose-800 text-white text-[10px] font-black py-0.5 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
+                View Streak Calendar! 📅
+              </span>
+            </button>
 
             {/* Profile Avatar */}
             <div className="w-12 h-12 rounded-full border-4 border-white shadow-md bg-indigo-400 overflow-hidden flex items-center justify-center text-white font-black font-display text-sm select-none">
@@ -194,21 +245,21 @@ export default function App() {
           <button
             id="tab-modules"
             onClick={() => { setSelectedModuleId("m1"); setWorkspaceTab("game"); setActiveTab("modules"); }}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-black tracking-wider transition-all font-display ${activeTab === "modules" ? "bg-white text-sky-900 shadow-md border-b-4 border-sky-400" : "text-sky-500 hover:text-sky-800"}`}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-black tracking-wider transition-all font-display ${activeTab === "modules" ? "bg-white text-sky-900 shadow-md border-b-4 border-sky-400" : "text-sky-500 hover:text-sky-800"}`}
           >
             LESSONS 📚
           </button>
           <button
             id="tab-badges"
             onClick={() => { setActiveTab("badges"); }}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-black tracking-wider transition-all font-display ${activeTab === "badges" ? "bg-white text-sky-900 shadow-md border-b-4 border-sky-400" : "text-sky-500 hover:text-sky-800"}`}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-black tracking-wider transition-all font-display ${activeTab === "badges" ? "bg-white text-sky-900 shadow-md border-b-4 border-sky-400" : "text-sky-500 hover:text-sky-800"}`}
           >
             BADGES RACK 🏅
           </button>
           <button
             id="tab-avatar"
             onClick={() => { setActiveTab("avatar"); }}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-black tracking-wider transition-all font-display ${activeTab === "avatar" ? "bg-white text-sky-900 shadow-md border-b-4 border-sky-400" : "text-sky-500 hover:text-sky-800"}`}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-black tracking-wider transition-all font-display ${activeTab === "avatar" ? "bg-white text-sky-900 shadow-md border-b-4 border-sky-400" : "text-sky-500 hover:text-sky-800"}`}
           >
             MASCOT SHOP 👕
           </button>
@@ -222,11 +273,46 @@ export default function App() {
               <div className="border-b-2 border-dashed border-sky-100 pb-3">
                 <h3 className="font-black text-sky-900 text-lg font-display flex items-center justify-between">
                   <span>Interactive Learning</span>
-                  <span className="text-xs bg-sky-100 text-sky-700 px-2.5 py-1 rounded-full font-mono">
+                  <span className="text-sm bg-sky-100 text-sky-700 px-2.5 py-1 rounded-full font-mono">
                     {progress.completedModules.length}/10 Done
                   </span>
                 </h3>
-                <p className="text-[10px] text-slate-400 font-bold mt-1">Select any module below to start playing or solving worksheets immediately!</p>
+                <p className="text-xs text-slate-400 font-bold mt-1">Select any module below to start playing or solving worksheets immediately!</p>
+              </div>
+
+              {/* Daily Streak Challenge Card */}
+              <div 
+                onClick={() => setIsStreakModalOpen(true)}
+                className="bg-gradient-to-r from-rose-50 to-orange-50 hover:from-rose-100 hover:to-orange-100 border-2 border-rose-100 hover:border-rose-200 rounded-3xl p-4 shadow-sm cursor-pointer transition-all relative overflow-hidden group"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-3xl filter drop-shadow animate-pulse">🔥</span>
+                    <div className="text-left">
+                      <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest leading-none">DAILY STREAK</p>
+                      <h4 className="font-black text-rose-900 text-base font-display mt-0.5">
+                        {progress.streakCount ?? 3} Days Hot!
+                      </h4>
+                    </div>
+                  </div>
+                  <span className="text-xs font-black bg-rose-500 hover:bg-rose-600 text-white px-2 py-1 rounded-xl uppercase tracking-wider group-hover:scale-105 transition-all shadow-sm">
+                    View 📅
+                  </span>
+                </div>
+                <div className="mt-3 flex gap-1 justify-between text-center">
+                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => {
+                    const active = (progress.streakCalendar ?? ["Mon", "Tue", "Wed"]).includes(d);
+                    return (
+                      <div key={d} className="flex-1">
+                        <div className={`w-7 h-7 mx-auto rounded-lg flex items-center justify-center text-[11px] font-black transition-all ${
+                          active ? "bg-rose-500 text-white shadow-sm" : "bg-slate-100 text-slate-400 border border-slate-200/60"
+                        }`}>
+                          {active ? "🔥" : d[0]}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="space-y-3 max-h-[640px] overflow-y-auto pr-1">
@@ -266,10 +352,10 @@ export default function App() {
                           <span>{catIcon}</span>
                         </div>
                         <div className="min-w-0 text-left">
-                          <p className={`text-[10px] font-black uppercase tracking-wider ${isSelected ? "text-sky-100" : "text-slate-400"}`}>
+                          <p className={`text-xs font-black uppercase tracking-wider ${isSelected ? "text-sky-100" : "text-slate-400"}`}>
                             Module {idx + 1}
                           </p>
-                          <p className="text-xs font-black truncate leading-tight font-display">
+                          <p className="text-sm font-black truncate leading-tight font-display">
                             {mod.title}
                           </p>
                         </div>
@@ -277,13 +363,13 @@ export default function App() {
 
                       <div className="shrink-0">
                         {isCompleted ? (
-                          <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-lg flex items-center gap-1 ${
+                          <span className={`text-xs font-black uppercase tracking-wider px-2 py-1 rounded-lg flex items-center gap-1 ${
                             isSelected ? "bg-white text-emerald-600" : "bg-emerald-100 text-emerald-700"
                           }`}>
                             Done
                           </span>
                         ) : (
-                          <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-lg flex items-center gap-1 ${
+                          <span className={`text-xs font-black uppercase tracking-wider px-2 py-1 rounded-lg flex items-center gap-1 ${
                             isSelected ? "bg-sky-400 text-white border border-sky-300" : "bg-yellow-400 text-yellow-950"
                           }`}>
                             Play
@@ -313,7 +399,7 @@ export default function App() {
                         </span>
                       </div>
                       <div>
-                        <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
+                        <span className={`text-xs font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full ${
                           activeModule.category === "basics" ? "bg-cyan-50 text-cyan-700 border border-cyan-100" :
                           activeModule.category === "earning" ? "bg-blue-50 text-blue-700 border border-blue-100" :
                           activeModule.category === "spending" ? "bg-pink-50 text-pink-700 border border-pink-100" :
@@ -323,7 +409,7 @@ export default function App() {
                           {activeModule.category}
                         </span>
                         <h2 className="text-xl font-black text-sky-900 mt-1 font-display leading-tight">{activeModule.title}</h2>
-                        <p className="text-[11px] text-slate-500 font-medium font-display leading-relaxed">{activeModule.subtitle}</p>
+                        <p className="text-sm text-slate-500 font-semibold font-display leading-relaxed">{activeModule.subtitle}</p>
                       </div>
                     </div>
 
@@ -331,7 +417,7 @@ export default function App() {
                     <div className="flex bg-slate-100 p-1 rounded-xl shrink-0 self-start md:self-center">
                       <button
                         onClick={() => setWorkspaceTab("game")}
-                        className={`px-4 py-2 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all font-display ${
+                        className={`px-4 py-2 rounded-lg text-sm font-black flex items-center gap-1.5 transition-all font-display ${
                           workspaceTab === "game"
                             ? "bg-white text-sky-900 shadow-sm border-b-2 border-sky-400"
                             : "text-slate-500 hover:text-slate-800"
@@ -341,7 +427,7 @@ export default function App() {
                       </button>
                       <button
                         onClick={() => setWorkspaceTab("worksheet")}
-                        className={`px-4 py-2 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all font-display ${
+                        className={`px-4 py-2 rounded-lg text-sm font-black flex items-center gap-1.5 transition-all font-display ${
                           workspaceTab === "worksheet"
                             ? "bg-sky-500 text-white shadow-sm border-b-2 border-sky-700"
                             : "text-slate-500 hover:text-slate-800"
@@ -382,7 +468,7 @@ export default function App() {
                             return (
                               <div
                                 key={stg.id}
-                                className={`flex-1 py-1.5 px-3 rounded-xl text-[10px] font-black text-center transition-all w-full sm:w-auto font-display ${
+                                className={`flex-1 py-1.5 px-3 rounded-xl text-xs md:text-sm font-black text-center transition-all w-full sm:w-auto font-display ${
                                   isActive 
                                     ? "bg-sky-500 text-white shadow-[0_3px_0_0_#0284c7] border border-sky-400" 
                                     : isPassed 
@@ -556,6 +642,14 @@ export default function App() {
         )}
 
       </main>
+
+      {/* STREAK CALENDAR MODAL */}
+      <StreakModal 
+        isOpen={isStreakModalOpen}
+        onClose={() => setIsStreakModalOpen(false)}
+        progress={progress}
+        onUpdateProgress={handleUpdateProgress}
+      />
 
       {/* FLOATING CHAT COMPONENT */}
       <FinnyChat />

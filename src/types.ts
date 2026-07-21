@@ -11,6 +11,10 @@ export interface UserProgress {
     clothing?: string;
     companion?: string;
   };
+  streakCount?: number;
+  longestStreak?: number;
+  streakFreezes?: number;
+  streakCalendar?: string[]; // e.g., ["Mon", "Tue"]
 }
 
 export interface Badge {

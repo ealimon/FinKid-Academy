@@ -57,7 +57,7 @@ export default function AvatarCustomizer({ progress, onUpdateProgress }: AvatarC
         <div className="bg-sky-50 border-2 border-sky-100 rounded-3xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[300px]">
           <div className="absolute inset-0 bg-gradient-to-b from-amber-50/20 to-indigo-50/10 pointer-events-none" />
           
-          <h3 className="text-xs font-black text-sky-700 uppercase tracking-widest absolute top-4 font-display">Your Mascot</h3>
+          <h3 className="text-sm font-black text-sky-700 uppercase tracking-widest absolute top-4 font-display">Your Mascot</h3>
           
           {/* Avatar Stage */}
           <div className="relative w-40 h-40 flex items-center justify-center bg-white rounded-full shadow-inner border-2 border-sky-100 mt-4">
@@ -99,8 +99,8 @@ export default function AvatarCustomizer({ progress, onUpdateProgress }: AvatarC
           </div>
  
           <div className="mt-4 space-y-1">
-            <h4 className="font-black text-sky-900 text-sm font-display">Finny's Twin Companion</h4>
-            <p className="text-[10px] text-sky-400 font-bold uppercase font-display">Active Outfit</p>
+            <h4 className="font-black text-sky-900 text-base font-display">Finny's Twin Companion</h4>
+            <p className="text-xs text-sky-400 font-black uppercase font-display">Active Outfit</p>
           </div>
         </div>
  
@@ -112,14 +112,14 @@ export default function AvatarCustomizer({ progress, onUpdateProgress }: AvatarC
               <button
                 id="tab-shop"
                 onClick={() => setActiveTab("shop")}
-                className={`px-4 py-2 rounded-xl text-xs transition-all font-display ${activeTab === "shop" ? "bg-white text-sky-900 shadow-sm border-b-2 border-sky-400 font-black" : "text-sky-500 hover:text-sky-800 font-bold"}`}
+                className={`px-4 py-2 rounded-xl text-sm transition-all font-display ${activeTab === "shop" ? "bg-white text-sky-900 shadow-sm border-b-2 border-sky-400 font-black" : "text-sky-500 hover:text-sky-800 font-bold"}`}
               >
                 Shop 🛒
               </button>
               <button
                 id="tab-closet"
                 onClick={() => setActiveTab("closet")}
-                className={`px-4 py-2 rounded-xl text-xs transition-all font-display ${activeTab === "closet" ? "bg-white text-sky-900 shadow-sm border-b-2 border-sky-400 font-black" : "text-sky-500 hover:text-sky-800 font-bold"}`}
+                className={`px-4 py-2 rounded-xl text-sm transition-all font-display ${activeTab === "closet" ? "bg-white text-sky-900 shadow-sm border-b-2 border-sky-400 font-black" : "text-sky-500 hover:text-sky-800 font-bold"}`}
               >
                 Wardrobe 👕
               </button>
@@ -128,7 +128,7 @@ export default function AvatarCustomizer({ progress, onUpdateProgress }: AvatarC
             {/* Wallet Balance */}
             <div className="bg-yellow-100 border-2 border-yellow-200 px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm font-display">
               <span className="text-lg">🪙</span>
-              <span className="font-black text-yellow-700 text-xs">{progress.coins} Fin-Coins</span>
+              <span className="font-black text-yellow-700 text-sm">{progress.coins} Fin-Coins</span>
             </div>
           </div>
  
@@ -159,19 +159,19 @@ export default function AvatarCustomizer({ progress, onUpdateProgress }: AvatarC
                             {item.asset}
                           </div>
                           <div className="text-left">
-                            <h4 className="font-black text-sky-900 text-xs font-display">{item.name}</h4>
-                            <p className="text-[9px] text-sky-400 font-bold uppercase font-display">{item.category}</p>
+                            <h4 className="font-black text-sky-900 text-sm font-display">{item.name}</h4>
+                            <p className="text-xs text-sky-400 font-black uppercase font-display">{item.category}</p>
                           </div>
                         </div>
  
                         {isUnlocked ? (
-                          <span className="text-[10px] text-sky-400 font-black bg-sky-100/60 px-2.5 py-1 rounded-lg font-display uppercase">Bought</span>
+                          <span className="text-xs text-sky-400 font-black bg-sky-100/60 px-2.5 py-1 rounded-lg font-display uppercase">Bought</span>
                         ) : (
                           <button
                             id={`buy-shop-${item.id}`}
                             disabled={progress.coins < item.cost}
                             onClick={() => handleBuyItem(item)}
-                            className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-slate-100 text-yellow-950 text-[10px] font-black px-3 py-2 rounded-xl transition-all flex items-center gap-1 shadow-md border-b-4 border-yellow-600 disabled:border-b-0 disabled:text-slate-400 font-display"
+                            className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-slate-100 text-yellow-950 text-xs font-black px-3 py-2 rounded-xl transition-all flex items-center gap-1 shadow-md border-b-4 border-yellow-600 disabled:border-b-0 disabled:text-slate-400 font-display"
                           >
                             Buy {item.cost} 🪙
                           </button>
@@ -214,12 +214,12 @@ export default function AvatarCustomizer({ progress, onUpdateProgress }: AvatarC
                                 {item.asset}
                               </div>
                               <div>
-                                <h4 className="font-black text-sky-900 text-xs font-display">{item.name}</h4>
-                                <p className="text-[9px] text-sky-400 font-bold uppercase font-display">{item.category}</p>
+                                <h4 className="font-black text-sky-900 text-sm font-display">{item.name}</h4>
+                                <p className="text-xs text-sky-400 font-black uppercase font-display">{item.category}</p>
                               </div>
                             </div>
  
-                            <span className={`text-[9px] font-black px-2.5 py-1 rounded-lg transition-all font-display uppercase ${
+                            <span className={`text-xs font-black px-2.5 py-1 rounded-lg transition-all font-display uppercase ${
                               isEquipped 
                                 ? "bg-emerald-500 text-white shadow-sm" 
                                 : "bg-sky-100 text-sky-700"

@@ -50,6 +50,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "Trading goods or services directly without using money is called bartering."
+      },
+      {
+        id: 4,
+        question: "What is the 'double coincidence of wants'?",
+        options: [
+          "When two people happen to want exactly what each other is trading.",
+          "When you accidentally buy two of the exact same toy.",
+          "When a store has a buy-one-get-one-free deal."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "The double coincidence of wants is the hard-to-find situation where two people have exactly what the other person desires to trade!"
+      },
+      {
+        id: 5,
+        question: "Why is paper cash better than gold coins for daily grocery shopping?",
+        options: [
+          "Because cash has cool pictures of historic presidents.",
+          "Because paper cash is much lighter, more compact, and easier to carry around.",
+          "Because paper cash is waterproof and cannot be ripped."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Paper cash is incredibly light and easy to carry compared to heavy bags of metal coins, making everyday trades fast and simple!"
       }
     ]
   },
@@ -102,6 +124,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "Jobs that require years of training, college degrees, or rare skills (like doctors or software engineers) tend to pay more to attract qualified people."
+      },
+      {
+        id: 4,
+        question: "What is a 'salary' compared to an 'hourly wage'?",
+        options: [
+          "A fixed amount of regular pay, regardless of the exact hours worked.",
+          "Money you are paid only during holiday seasons.",
+          "A bonus payment for working on high-rise buildings."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "A salary is a fixed, contracted payment (e.g., paid monthly or bi-weekly) regardless of whether you work exactly 38 or 40 hours that week, while an hourly wage changes depending on the hours logged."
+      },
+      {
+        id: 5,
+        question: "What is 'human capital' and how can you increase it?",
+        options: [
+          "The number of friends you have on your favorite social app.",
+          "Your knowledge, skills, education, and experience; you increase it by learning!",
+          "The physical size of your brain."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Human capital is your personal set of skills, education, and health. Investing in your human capital through study and practice helps you qualify for higher-paying careers!"
       }
     ]
   },
@@ -154,6 +198,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "Unexpected expenses (like repairs) are exactly why we keep a Savings/Emergency fund, so we don't have to panic or go into debt!"
+      },
+      {
+        id: 4,
+        question: "If you spend all your money on a movie and snacks instead of buying your required school textbook, what did you fail to prioritize?",
+        options: [
+          "Your savings goals.",
+          "Your needs (things you must have for your responsibilities and survival).",
+          "Your wants (things that are just for fun)."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Needs must always be paid for first! School books are a necessity for your education responsibility, while movies and snacks are fun wants."
+      },
+      {
+        id: 5,
+        question: "What does the '20' stand for in the 50/30/20 budget rule?",
+        options: [
+          "20% goes towards fun hobbies and streaming services.",
+          "20% goes towards savings, paying off debt, or investing for the future.",
+          "20% is given away as birthday gifts."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "The 20% slice is dedicated to savings and financial goals, helping you build a security net or prepare for big future purchases!"
       }
     ]
   },
@@ -206,6 +272,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "A bank savings account is safe, insured against loss, and pays you interest over time!"
+      },
+      {
+        id: 4,
+        question: "What is the 'principal' in a savings account?",
+        options: [
+          "The strict school director who watches over the local bank.",
+          "The initial sum of money you deposit before any interest is earned.",
+          "The paper document that proves the bank is real."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "In finance, 'principal' is the original amount of money you put in. Interest is calculated as a percentage of this principal!"
+      },
+      {
+        id: 5,
+        question: "If you deposit $100 at a 10% annual interest rate, how much money do you have after 2 years with compound interest?",
+        options: [
+          "$110",
+          "$121",
+          "$115"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Year 1: $100 + $10 interest = $110. Year 2: you earn 10% on the new $110, which is $11, making the total $121! That's compound magic!"
       }
     ]
   },
@@ -258,6 +346,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "Stores place candies and fun trinkets right at the cash register to trigger 'impulse buys'—unplanned items they hope you'll grab without thinking!"
+      },
+      {
+        id: 4,
+        question: "Why is comparing the 'unit price' often more helpful than just looking at the retail price tag?",
+        options: [
+          "Because the unit price is always printed in a prettier font.",
+          "Because package sizes differ, and unit price reveals the actual cost per ounce or gram.",
+          "Because unit pricing automatically subtracts tax."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Two boxes might look the same size, but one might have half the weight inside! Comparing unit price (like price per ounce) cuts through packaging tricks."
+      },
+      {
+        id: 5,
+        question: "What is a 'loss leader' used by grocery stores?",
+        options: [
+          "An employee who loses keys often.",
+          "A popular item sold at a very low price (even losing money) to attract shoppers into the store.",
+          "A brand of milk that has expired."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Stores advertise super cheap items (like milk or bread) to get you in the door, hoping you'll buy plenty of regular-priced items while you're there!"
       }
     ]
   },
@@ -310,6 +420,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "The routing number tells banking computers exactly which bank in the country holds your account, ensuring money routes to the correct destination."
+      },
+      {
+        id: 4,
+        question: "What does it mean when a check 'bounces'?",
+        options: [
+          "The paper check was printed on a rubber-like material.",
+          "The account owner didn't have enough money in their account to pay the check amount.",
+          "The bank teller physically dropped the check on the floor."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "A check bounces when there are insufficient funds in the checking account. The bank rejects the payment, and the check writer is often fined a fee!"
+      },
+      {
+        id: 5,
+        question: "What is the main difference between a debit card and a credit card?",
+        options: [
+          "Debit cards spend money directly from your bank account; credit cards borrow the money to pay back later.",
+          "Debit cards can only be used at night.",
+          "Credit cards don't have PIN numbers."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "With a debit card, you spend your own money instantly from your checking account. With a credit card, you are borrowing money from the bank and will receive a bill later."
       }
     ]
   },
@@ -362,6 +494,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "A credit score is like a financial GPA. It tells lenders how reliable you are at paying back debt. High scores make borrowing cheaper and easier!"
+      },
+      {
+        id: 4,
+        question: "How can you build and maintain a high, excellent credit score?",
+        options: [
+          "By buying as many video games as possible on credit cards.",
+          "By paying your bills on time, keeping debt low, and only borrowing what you can afford.",
+          "By keeping your money in a shoe box instead of a bank."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "The single best way to build great credit is to pay every bill on time and keep your credit card balances very low relative to your limits!"
+      },
+      {
+        id: 5,
+        question: "What is 'APR' on a credit card?",
+        options: [
+          "Automatic Payment Refund, which returns your money.",
+          "Annual Percentage Rate, which is the yearly interest cost charged on unpaid debt.",
+          "A special credit card for the month of April."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "APR stands for Annual Percentage Rate. It is the yearly cost of interest you have to pay if you carry a balance on your credit card!"
       }
     ]
   },
@@ -414,6 +568,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "Diversification is the golden rule of investing: 'Don't put all your eggs in one basket!' If one company fails, your other investments protect you."
+      },
+      {
+        id: 4,
+        question: "What is a 'dividend' paid by some companies?",
+        options: [
+          "A math operation taught in high school.",
+          "A portion of a company's profits paid directly back to its shareholders as cash.",
+          "A tax paid to the local city council."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Some successful, stable companies share their earnings by sending regular cash payments (dividends) directly to their stock owners!"
+      },
+      {
+        id: 5,
+        question: "What is the difference between a 'Bull Market' and a 'Bear Market'?",
+        options: [
+          "A Bull Market means prices are rising; a Bear Market means prices are falling.",
+          "A Bull Market is only for farming companies; a Bear Market is for honey companies.",
+          "They are named after the favorite pets of the stock exchange president."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "A Bull market charges ahead with rising stock prices and strong investor confidence. A Bear market hibernates with falling stock prices!"
       }
     ]
   },
@@ -466,6 +642,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "FICA is the Federal Insurance Contributions Act. It's a special tax that is put away to help pay for retirement and medical care for seniors and people with disabilities!"
+      },
+      {
+        id: 4,
+        question: "What is 'progressive taxation'?",
+        options: [
+          "A tax system where tax rates increase as your income increases.",
+          "A tax that only applies to high-tech companies.",
+          "A tax system that changes every month."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "In a progressive tax system, people with higher incomes pay a higher percentage rate of tax, ensuring those who make more contribute a larger share to public resources."
+      },
+      {
+        id: 5,
+        question: "What is a W-2 form?",
+        options: [
+          "A permission slip to work on weekends.",
+          "An annual tax form showing your total earnings and the taxes withheld from your pay.",
+          "A form used to open a new checking account."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Every January, employers send workers a W-2 form. It summarizes exactly how much you earned and how much tax you paid the previous year, which is crucial for filling out tax returns!"
       }
     ]
   },
@@ -518,6 +716,28 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "Philanthropy is about your heart! Donating gently used clothes, books, toys, or volunteering your time to help clean a park are all incredible ways to give back!"
+      },
+      {
+        id: 4,
+        question: "What is a 'nonprofit organization' or charity?",
+        options: [
+          "A business that has failed and makes no sales.",
+          "An organization set up to help the public or a cause, where all money goes back to that mission instead of making owners rich.",
+          "A bank that doesn't charge interest."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Nonprofit organizations focus entirely on public benefit or helping a specific cause. They do not have private owners earning profits; all extra funds go to their charitable work!"
+      },
+      {
+        id: 5,
+        question: "What is an 'endowment'?",
+        options: [
+          "An annual tax paid on wild animals.",
+          "A donated fund of money that is kept and invested, so the interest can support a charity forever.",
+          "The act of buying a large public building."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "An endowment is a financial gift invested to grow over time. The charity only spends the earned investment returns, ensuring the gift funds their mission forever!"
       }
     ]
   }

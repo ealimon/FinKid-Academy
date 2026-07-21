@@ -46,7 +46,7 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
         <div className="space-y-6">
           {/* Progress indicators */}
           <div className="flex justify-between items-center pb-2 border-b-2 border-sky-50">
-            <span className="text-xs font-black text-sky-700 bg-sky-100 border border-sky-200 px-3 py-1.5 rounded-full font-display uppercase">
+            <span className="text-sm font-black text-sky-700 bg-sky-100 border border-sky-200 px-3 py-1.5 rounded-full font-display uppercase">
               Quiz: Question {currentQuestionIdx + 1} of {module.quizzes.length}
             </span>
             <div className="flex gap-1.5">
@@ -67,7 +67,7 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
 
           {/* Question Text */}
           <div className="space-y-1.5 text-left">
-            <h3 className="font-black text-sky-950 text-base sm:text-lg leading-snug font-display">
+            <h3 className="font-black text-sky-950 text-lg sm:text-xl leading-snug font-display">
               {currentQuestion.question}
             </h3>
           </div>
@@ -97,7 +97,7 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
                   id={`quiz-option-${idx}`}
                   disabled={hasSubmitted}
                   onClick={() => handleSelectOption(idx)}
-                  className={`w-full border-2 rounded-2xl px-5 py-4 text-left text-xs font-bold transition-all flex justify-between items-center ${optionStyle}`}
+                  className={`w-full border-2 rounded-2xl px-5 py-4 text-left text-sm font-black transition-all flex justify-between items-center ${optionStyle}`}
                 >
                   <span className="font-display leading-relaxed">{option}</span>
                   {hasSubmitted && isCorrect && <Check className="w-5 h-5 text-green-600 shrink-0 ml-2" />}
@@ -114,7 +114,7 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
                 id="submit-answer-btn"
                 disabled={selectedAnswerIdx === null}
                 onClick={handleSubmitAnswer}
-                className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-slate-100 disabled:text-slate-400 disabled:border-b-0 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-xs font-display tracking-wider uppercase"
+                className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-slate-100 disabled:text-slate-400 disabled:border-b-0 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-sm font-display tracking-wider uppercase"
               >
                 Submit Answer
               </button>
@@ -127,8 +127,8 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
                 <div className="bg-sky-50 border-2 border-sky-100 p-4 rounded-2xl flex items-start gap-3 text-left">
                   <AlertCircle className="w-5 h-5 text-sky-500 shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black text-sky-500 uppercase tracking-wider font-display">Finny's Explanation:</p>
-                    <p className="text-xs text-sky-900 leading-relaxed font-bold font-display">
+                    <p className="text-xs font-black text-sky-500 uppercase tracking-wider font-display">Finny's Explanation:</p>
+                    <p className="text-sm text-sky-900 leading-relaxed font-bold font-display">
                       {currentQuestion.explanation}
                     </p>
                   </div>
@@ -137,7 +137,7 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
                 <button
                   id="next-quiz-btn"
                   onClick={handleNextQuestion}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-xs flex items-center justify-center gap-2 font-display uppercase tracking-wide"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2 font-display uppercase tracking-wide"
                 >
                   {currentQuestionIdx < module.quizzes.length - 1 ? "Next Question" : "Finish Quiz"}
                   <ArrowRight className="w-4 h-4" />
@@ -156,7 +156,7 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
 
           <div className="space-y-2">
             <h3 className="text-2xl font-black text-sky-950 tracking-tight font-display">Lesson Mastered!</h3>
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-sm text-slate-500 font-semibold">
               You scored <strong>{score} out of {module.quizzes.length}</strong>! You've unlocked the badge!
             </p>
           </div>
@@ -167,18 +167,18 @@ export default function ModuleQuiz({ module, onComplete }: ModuleQuizProps) {
               🏅
             </div>
             <div>
-              <h4 className="font-black text-sky-900 text-sm flex items-center gap-1.5 font-display">
+              <h4 className="font-black text-sky-900 text-base flex items-center gap-1.5 font-display">
                 {module.badge.title}
                 <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
               </h4>
-              <p className="text-xs text-slate-500 mt-1 font-medium">{module.badge.description}</p>
+              <p className="text-sm text-slate-500 mt-1 font-semibold">{module.badge.description}</p>
             </div>
           </div>
 
           <button
             id="collect-rewards-btn"
             onClick={onComplete}
-            className="w-full max-w-xs bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-xs flex items-center justify-center gap-2 mx-auto font-display uppercase tracking-wide"
+            className="w-full max-w-xs bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2 mx-auto font-display uppercase tracking-wide"
           >
             Collect Lesson Rewards <Award className="w-5 h-5" />
           </button>
