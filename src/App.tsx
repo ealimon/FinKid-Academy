@@ -494,11 +494,11 @@ export default function App() {
                                   <p className="font-bold text-sky-900 flex items-center gap-2 font-display text-base sm:text-lg">
                                     <GraduationCap className="w-5 h-5 text-yellow-500 shrink-0" /> Learning Core Concepts:
                                   </p>
-                                  <p>
-                                    Wealth is a master tool that makes society prosper. Understanding how to Earn, Budget, Save, Invest, and Donate prepares you for the ultimate financial quests in life!
+                                  <p className="text-slate-700 font-medium leading-relaxed">
+                                    {activeModule?.description}
                                   </p>
-                                  <p>
-                                    In this lesson, you will play a customized simulation. Tap the button below to start the game and get hands-on experience!
+                                  <p className="text-xs sm:text-sm text-sky-800/80 font-semibold bg-sky-100/60 p-3 rounded-xl border border-sky-200/50">
+                                    💡 In this lesson, you will play a customized simulation. Tap the button below to start the game and get hands-on experience!
                                   </p>
                                 </div>
                               </div>
