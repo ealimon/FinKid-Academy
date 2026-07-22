@@ -484,14 +484,14 @@ export default function App() {
                           {moduleStage === "intro" && (
                             <div className="bg-white border-2 border-sky-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_0_0_#e0f2fe] space-y-6 text-left max-w-2xl mx-auto">
                               <div className="space-y-1 pb-4 border-b border-sky-100">
-                                <span className="text-xs font-black text-sky-700 bg-sky-100 border border-sky-200 px-3 py-1 rounded-full uppercase font-display">Interactive Guide Tutorial</span>
-                                <h2 className="text-2xl font-black text-sky-900 mt-3 font-display">{activeModule?.title}</h2>
-                                <p className="text-xs text-sky-400 font-bold uppercase font-display">{activeModule?.subtitle}</p>
+                                <span className="text-xs sm:text-sm font-black text-sky-700 bg-sky-100 border border-sky-200 px-3.5 py-1 rounded-full uppercase font-display">Interactive Guide Tutorial</span>
+                                <h2 className="text-2xl sm:text-3xl font-black text-sky-900 mt-3 font-display">{activeModule?.title}</h2>
+                                <p className="text-sm sm:text-base text-sky-500 font-bold uppercase font-display">{activeModule?.subtitle}</p>
                               </div>
 
                               <div className="space-y-4">
-                                <div className="bg-sky-50/50 p-5 rounded-2xl border border-sky-100 text-xs text-slate-700 leading-relaxed space-y-3 font-medium">
-                                  <p className="font-bold text-sky-900 flex items-center gap-1.5 font-display text-sm">
+                                <div className="bg-sky-50/50 p-5 sm:p-6 rounded-2xl border border-sky-100 text-sm sm:text-base text-slate-800 leading-relaxed space-y-3.5 font-medium">
+                                  <p className="font-bold text-sky-900 flex items-center gap-2 font-display text-base sm:text-lg">
                                     <GraduationCap className="w-5 h-5 text-yellow-500 shrink-0" /> Learning Core Concepts:
                                   </p>
                                   <p>
@@ -506,9 +506,9 @@ export default function App() {
                               <button
                                 id="launch-interactive-game"
                                 onClick={() => handleModuleStageTransition("game")}
-                                className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-xs flex items-center justify-center gap-2 font-display uppercase tracking-wide"
+                                className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-4 rounded-2xl shadow-lg border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-sm sm:text-base flex items-center justify-center gap-2 font-display uppercase tracking-wide"
                               >
-                                Start Interactive Game! <Play className="w-4 h-4" />
+                                Start Interactive Game! <Play className="w-4 h-4 sm:w-5 sm:h-5" />
                               </button>
                             </div>
                           )}
