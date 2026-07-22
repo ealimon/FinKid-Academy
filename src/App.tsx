@@ -211,10 +211,6 @@ export default function App() {
               </span>
             </button>
 
-            {/* Profile Avatar */}
-            <div className="w-12 h-12 rounded-full border-4 border-white shadow-md bg-indigo-400 overflow-hidden flex items-center justify-center text-white font-black font-display text-sm select-none">
-              FK
-            </div>
 
             {/* Reset Stats */}
             <button

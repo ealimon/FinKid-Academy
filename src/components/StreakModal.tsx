@@ -134,7 +134,7 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
               </div>
               <div>
                 <span className="text-xs bg-white/20 font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                  DUOLINGO-STYLE STREAK
+                  DAILY STREAK
                 </span>
                 <h3 className="text-2xl font-black font-display tracking-tight mt-1">
                   {streakCount} Day Learning Streak!
