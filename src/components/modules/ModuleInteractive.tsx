@@ -1026,7 +1026,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
               <div className="space-y-6">
                 <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-bold text-slate-800 text-sm">Organize Your $1,000 Budget Stipend</h3>
+                    <h3 className="font-bold text-slate-800 text-sm">Organize Your $1,000 Monthly Income</h3>
                     <span className="text-xs font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
                       Total Allocation: {gameState.needs + gameState.wants + gameState.savings}%
                     </span>
