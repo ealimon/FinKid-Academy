@@ -150,38 +150,182 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
   // ----------------------------------------------------
   // MODULE 2: CAREER CHOICES & INCOME
   // ----------------------------------------------------
+  const CAREER_TASKS: Record<string, {
+    time: string;
+    title: string;
+    scenario: string;
+    options: {
+      label: string;
+      bonus: number;
+      feedback: string;
+      isQuality: boolean;
+    }[];
+  }[]> = {
+    "Baker 🥐": [
+      {
+        time: "09:00 AM - Morning Rush",
+        title: "Large Croissant Order",
+        scenario: "A local cafe orders 40 fresh croissants for their morning rush! How do you operate the bakery ovens?",
+        options: [
+          { label: "Use precision timer & calibrated baking temperatures", bonus: 15, feedback: "Perfect golden croissants! The cafe owner tips $15 for stellar quality.", isQuality: true },
+          { label: "Crank oven heat to maximum to bake as fast as possible", bonus: 0, feedback: "Croissants were slightly burnt on top. No bonus earned.", isQuality: false }
+        ]
+      },
+      {
+        time: "01:00 PM - Ingredient Sourcing",
+        title: "Flour Supply Management",
+        scenario: "Flour prices went up! How do you source ingredients for tomorrow's bread and pastry batches?",
+        options: [
+          { label: "Compare wholesale suppliers to get organic flour at bulk discount", bonus: 20, feedback: "Great cost savings! Bakery manager awards a $20 efficiency bonus.", isQuality: true },
+          { label: "Buy small bags at the retail grocery store last minute", bonus: 0, feedback: "Expensive retail purchase reduced bakery profit margins.", isQuality: false }
+        ]
+      },
+      {
+        time: "04:00 PM - Custom Special Order",
+        title: "3-Tier Birthday Cake",
+        scenario: "A customer requests an elaborate custom birthday cake with intricate sugar decorations.",
+        options: [
+          { label: "Craft detailed sugar decorations with care and precision", bonus: 25, feedback: "Customer was thrilled with the masterpiece and left a $25 tip!", isQuality: true },
+          { label: "Rush through decoration with basic standard frosting", bonus: 5, feedback: "Customer accepted it, leaving a small $5 tip.", isQuality: false }
+        ]
+      }
+    ],
+    "Eco Scientist 🧪": [
+      {
+        time: "09:00 AM - Field Sampling",
+        title: "River Water Quality Check",
+        scenario: "Water samples from the local river show an unusual acidic pH reading near the industrial park.",
+        options: [
+          { label: "Run multi-point chemical lab testing to isolate the exact pollution source", bonus: 25, feedback: "Accurate data isolated the runoff source! City awards a $25 research bonus.", isQuality: true },
+          { label: "Guess the cause without re-testing to finish field work early", bonus: 0, feedback: "Inaccurate report required re-sampling later. No bonus earned.", isQuality: false }
+        ]
+      },
+      {
+        time: "01:00 PM - Council Presentation",
+        title: "Environmental Impact Report",
+        scenario: "You are presenting clean energy initiatives and solar impact statistics to the town council.",
+        options: [
+          { label: "Create clear, easy-to-read charts highlighting community savings", bonus: 30, feedback: "Council approved $10k in green grants & awarded a $30 merit bonus!", isQuality: true },
+          { label: "Present unorganized raw spreadsheets without summary visual charts", bonus: 0, feedback: "Council struggled to understand the data. No bonus awarded.", isQuality: false }
+        ]
+      },
+      {
+        time: "04:00 PM - Laboratory Audit",
+        title: "Lab Safety & Mentorship",
+        scenario: "A student intern left chemical containers un-labeled in the testing area.",
+        options: [
+          { label: "Safely label everything according to ISO protocols and coach the intern", bonus: 20, feedback: "Lab Director praises your leadership with a $20 safety excellence bonus!", isQuality: true },
+          { label: "Ignore the containers and leave them for the evening shift", bonus: 0, feedback: "Safety hazard flagged by inspector.", isQuality: false }
+        ]
+      }
+    ],
+    "Veterinarian 🩺": [
+      {
+        time: "09:00 AM - Morning Appointment",
+        title: "Puppy Wellness Exam",
+        scenario: "Barnaby the Golden Retriever puppy is visiting for his annual checkup and vaccinations.",
+        options: [
+          { label: "Perform gentle full exam, weigh Barnaby, and reward him with treats", bonus: 25, feedback: "Barnaby was calm & happy! Pet owner left a 5-star review & $25 tip.", isQuality: true },
+          { label: "Rush the examination without calming treats or gentle handling", bonus: 0, feedback: "Barnaby whimpered and was frightened. No tip received.", isQuality: false }
+        ]
+      },
+      {
+        time: "01:00 PM - Pharmacy & Dosage",
+        title: "Medication Calculation",
+        scenario: "Calculating antibiotic dosage for a 12 lb feline patient suffering from an ear infection.",
+        options: [
+          { label: "Use exact weight formula (10mg/lb = 120mg) and verify with chart", bonus: 30, feedback: "Spot-on treatment plan! Clinic Director awards a $30 accuracy bonus.", isQuality: true },
+          { label: "Estimate dosage by eye without checking the patient weight record", bonus: 0, feedback: "Risky estimate corrected by senior vet. No bonus earned.", isQuality: false }
+        ]
+      },
+      {
+        time: "04:00 PM - Urgent Walk-In",
+        title: "Emergency Parrot Care",
+        scenario: "A parrot swallowed a shiny metal button and needs immediate emergency care!",
+        options: [
+          { label: "Perform digital X-ray imaging and gently extract the foreign object", bonus: 35, feedback: "Successfully saved the parrot! Grateful owner rewards a $35 emergency bonus.", isQuality: true },
+          { label: "Refer the patient to a clinic 45 minutes across town", bonus: 0, feedback: "Patient transferred elsewhere.", isQuality: false }
+        ]
+      }
+    ],
+    "Game Developer 💻": [
+      {
+        time: "09:00 AM - Server Optimization",
+        title: "Multiplayer Lag Bug",
+        scenario: "Your team's new online multiplayer game suffers lag spikes when 100 players gather in a city.",
+        options: [
+          { label: "Optimize networking code & cache player positions on local clients", bonus: 35, feedback: "Frame rate doubled! Lead Architect awards a $35 performance bonus.", isQuality: true },
+          { label: "Lower game graphics resolution for all players to reduce bandwidth", bonus: 0, feedback: "Players complained about blurry visuals.", isQuality: false }
+        ]
+      },
+      {
+        time: "01:00 PM - User Interface UX",
+        title: "Mobile Screen Redesign",
+        scenario: "Redesigning the main game navigation menu for smaller mobile touchscreen displays.",
+        options: [
+          { label: "Design touch-friendly large controls with haptic feedback responses", bonus: 40, feedback: "User satisfaction jumped 45%! Studio grants a $40 UX Award.", isQuality: true },
+          { label: "Keep tiny desktop buttons crammed on the phone screen", bonus: 0, feedback: "Players kept misclicking buttons.", isQuality: false }
+        ]
+      },
+      {
+        time: "04:00 PM - Season Update Launch",
+        title: "Production Deployment",
+        scenario: "Preparing to publish the new season game update to millions of active players.",
+        options: [
+          { label: "Run automated test suites and deploy staging server sandbox first", bonus: 45, feedback: "Flawless launch with zero server downtime! Executive $45 bonus awarded!", isQuality: true },
+          { label: "Push code directly to live production servers without running tests", bonus: 0, feedback: "Server crashed for 20 minutes.", isQuality: false }
+        ]
+      }
+    ]
+  };
+
   const selectJob = (jobName: string, wage: number) => {
+    setGameState({
+      selectedJob: { name: jobName, wage },
+      taskIndex: 0,
+      totalBonus: 0,
+      taskFeedback: null,
+      selectedOption: null,
+      stage: "work"
+    });
+  };
+
+  const handleTaskChoice = (bonus: number, feedback: string, optionIndex: number) => {
     setGameState((prev: any) => ({
       ...prev,
-      selectedJob: { name: jobName, wage },
-      clicks: 0,
-      earnings: 0,
-      stage: "work"
+      selectedOption: optionIndex,
+      taskFeedback: feedback,
+      totalBonus: prev.totalBonus + bonus
     }));
   };
 
-  const workShift = () => {
+  const handleNextTask = () => {
     setGameState((prev: any) => {
-      const newClicks = prev.clicks + 1;
-      const hoursWorked = newClicks * 1.6; // click makes hours tick
-      const totalEarned = hoursWorked * prev.selectedJob.wage;
-      const isShiftDone = newClicks >= 5;
-      
-      if (isShiftDone) {
-        const tax = totalEarned * 0.2; // 20% tax
+      const jobKey = prev.selectedJob?.name || "Baker 🥐";
+      const tasks = CAREER_TASKS[jobKey] || CAREER_TASKS["Baker 🥐"];
+      const nextIdx = prev.taskIndex + 1;
+
+      if (nextIdx >= tasks.length) {
+        const baseEarnings = prev.selectedJob.wage * 8;
+        const grossPay = baseEarnings + prev.totalBonus;
+        const tax = Math.round(grossPay * 0.20);
+        const netPay = grossPay - tax;
         return {
           ...prev,
-          clicks: newClicks,
-          earnings: Math.round(totalEarned),
-          taxDeducted: Math.round(tax),
-          netPay: Math.round(totalEarned - tax),
+          taskIndex: nextIdx,
+          baseEarnings,
+          grossPay,
+          taxDeducted: tax,
+          netPay,
           stage: "paystub"
         };
       }
+
       return {
         ...prev,
-        clicks: newClicks,
-        earnings: Math.round(totalEarned)
+        taskIndex: nextIdx,
+        selectedOption: null,
+        taskFeedback: null
       };
     });
   };
@@ -644,28 +788,43 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
           <div className="space-y-6">
             {gameState.stage === "select" && (
               <div className="space-y-4">
-                <p className="text-sm text-slate-600 font-medium">Select a job pathway to see how hourly wages work:</p>
+                <div className="bg-sky-50 border border-sky-100 p-4 rounded-2xl flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 font-bold text-lg shadow-sm">
+                    💼
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sky-950 text-sm sm:text-base font-display">Choose Your Career Pathway</h3>
+                    <p className="text-xs sm:text-sm text-sky-800 font-medium">Select a job to experience real workday tasks and see how hourly wages & quality work bonuses impact your gross paycheck!</p>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
-                    { name: "Baker 🥐", wage: 20, desc: "Bakes warm treats and yummy pastries." },
-                    { name: "Eco Scientist 🧪", wage: 30, desc: "Studies nature and protects environment." },
-                    { name: "Veterinarian 🩺", wage: 35, desc: "Helps adorable animals stay healthy." },
-                    { name: "Game Developer 💻", wage: 45, desc: "Codes awesome video games and apps." }
+                    { name: "Baker 🥐", wage: 20, desc: "Bakes warm treats, artisanal breads, and custom pastries." },
+                    { name: "Eco Scientist 🧪", wage: 30, desc: "Analyzes ecosystems and protects the local environment." },
+                    { name: "Veterinarian 🩺", wage: 35, desc: "Provides healthcare, vaccines & surgery for animals." },
+                    { name: "Game Developer 💻", wage: 45, desc: "Codes gameplay systems, graphics, and server networking." }
                   ].map((job) => (
                     <button
                       key={job.name}
                       id={`job-${job.name.toLowerCase().split(' ')[0]}`}
                       onClick={() => selectJob(job.name, job.wage)}
-                      className="bg-white border border-slate-200 hover:border-blue-400 p-4 rounded-xl shadow-sm text-left transition-all hover:shadow-md hover:-translate-y-0.5"
+                      className="bg-white border-2 border-slate-200 hover:border-sky-400 p-5 rounded-2xl shadow-sm text-left transition-all hover:shadow-md hover:-translate-y-0.5 group flex flex-col justify-between"
                     >
-                      <h4 className="font-bold text-slate-800 text-sm">{job.name}</h4>
-                      <p className="text-xs text-slate-500 mt-1">{job.desc}</p>
-                      <div className="mt-3 flex justify-between items-center">
-                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                          ${job.wage}/hr
-                        </span>
-                        <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
-                          Select <ArrowRight className="w-3.5 h-3.5" />
+                      <div>
+                        <div className="flex justify-between items-start mb-1.5">
+                          <h4 className="font-bold text-slate-900 text-base font-display group-hover:text-sky-600 transition-colors">{job.name}</h4>
+                          <span className="text-xs font-black text-sky-700 bg-sky-50 border border-sky-200 px-3 py-1 rounded-full font-display">
+                            ${job.wage}/hr
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">{job.desc}</p>
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs font-bold text-slate-400 group-hover:text-sky-600">
+                        <span>Base Shift Pay: ${(job.wage * 8)}</span>
+                        <span className="flex items-center gap-1 font-display uppercase tracking-wider text-[11px]">
+                          Start Shift <ArrowRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
                     </button>
@@ -674,77 +833,184 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
               </div>
             )}
 
-            {gameState.stage === "work" && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm max-w-md mx-auto text-center space-y-4">
-                <span className="text-3xl">💼</span>
-                <h3 className="font-bold text-slate-800 text-base">Workday Simulation</h3>
-                <p className="text-xs text-slate-500">
-                  You are working as a <strong>{gameState.selectedJob?.name}</strong> making <strong>${gameState.selectedJob?.wage}/hour</strong>. Click the button to perform tasks and finish your 8-hour shift!
-                </p>
+            {gameState.stage === "work" && (() => {
+              const jobKey = gameState.selectedJob?.name || "Baker 🥐";
+              const tasks = CAREER_TASKS[jobKey] || CAREER_TASKS["Baker 🥐"];
+              const currentTask = tasks[gameState.taskIndex] || tasks[0];
+              const baseEarnings = gameState.selectedJob?.wage * 8;
+              const currentEarnings = baseEarnings + (gameState.totalBonus || 0);
 
-                <div className="w-full bg-slate-100 rounded-full h-3">
-                  <div 
-                    className="bg-blue-500 h-3 rounded-full transition-all duration-300"
-                    style={{ width: `${(gameState.clicks / 5) * 100}%` }}
-                  />
+              return (
+                <div className="space-y-5 max-w-xl mx-auto">
+                  {/* Job Header Bar */}
+                  <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-black text-xl font-display">
+                        {gameState.selectedJob?.name.split(" ").slice(-1)[0]}
+                      </div>
+                      <div>
+                        <h3 className="font-black text-slate-900 text-base font-display">{gameState.selectedJob?.name}</h3>
+                        <p className="text-xs text-sky-600 font-bold font-display uppercase tracking-wide">
+                          ${gameState.selectedJob?.wage}/hr Base Rate (8 Hour Shift)
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-right bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl">
+                      <span className="text-[10px] font-black text-emerald-600 uppercase tracking-wider block font-display">Live Paycheck Meter</span>
+                      <span className="text-base font-black text-emerald-700 font-display">${currentEarnings} Gross</span>
+                    </div>
+                  </div>
+
+                  {/* Shift Progress Timeline */}
+                  <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-2">
+                    <div className="flex justify-between items-center text-xs font-bold text-slate-500 font-display uppercase tracking-wider">
+                      <span>Shift Timeline</span>
+                      <span className="text-sky-600">Task {gameState.taskIndex + 1} of {tasks.length}</span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                      <div
+                        className="bg-sky-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${((gameState.taskIndex + (gameState.selectedOption !== null ? 1 : 0)) / tasks.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Task Card */}
+                  <div className="bg-white rounded-2xl border-2 border-sky-100 p-6 shadow-md space-y-5 text-left relative overflow-hidden">
+                    <div className="flex justify-between items-center border-b border-sky-100 pb-3">
+                      <span className="text-xs font-black text-sky-700 bg-sky-50 border border-sky-200 px-3 py-1 rounded-full uppercase font-display">
+                        ⏰ {currentTask.time}
+                      </span>
+                      <span className="text-xs font-bold text-slate-400">Workplace Scenario</span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <h4 className="text-lg font-black text-slate-900 font-display">{currentTask.title}</h4>
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                        {currentTask.scenario}
+                      </p>
+                    </div>
+
+                    {/* Options or Feedback */}
+                    {gameState.selectedOption === null ? (
+                      <div className="space-y-3 pt-2">
+                        <p className="text-xs font-bold text-sky-900 uppercase tracking-wider font-display">How will you handle this situation?</p>
+                        {currentTask.options.map((opt, idx) => (
+                          <button
+                            key={idx}
+                            id={`task-option-${idx}`}
+                            onClick={() => handleTaskChoice(opt.bonus, opt.feedback, idx)}
+                            className="w-full bg-sky-50/60 hover:bg-sky-100/80 border-2 border-sky-200/80 hover:border-sky-400 p-4 rounded-xl text-left transition-all hover:scale-[1.01] active:scale-[0.99] space-y-1 group"
+                          >
+                            <div className="flex items-start gap-2.5">
+                              <span className="w-6 h-6 rounded-full bg-sky-200 text-sky-900 font-black text-xs flex items-center justify-center shrink-0 mt-0.5 font-display group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                                {idx === 0 ? "A" : "B"}
+                              </span>
+                              <span className="text-xs sm:text-sm font-bold text-slate-800 leading-snug group-hover:text-sky-950">
+                                {opt.label}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-4 pt-2">
+                        <div className={`p-4 rounded-xl border-2 space-y-2 ${
+                          currentTask.options[gameState.selectedOption].bonus > 0 
+                            ? "bg-emerald-50/80 border-emerald-300 text-emerald-950" 
+                            : "bg-amber-50/80 border-amber-300 text-amber-950"
+                        }`}>
+                          <div className="flex items-center justify-between">
+                            <span className="font-black text-xs uppercase tracking-wider font-display flex items-center gap-1.5">
+                              {currentTask.options[gameState.selectedOption].bonus > 0 ? "✨ Performance Bonus Earned!" : "⚠️ Standard Outcome"}
+                            </span>
+                            {currentTask.options[gameState.selectedOption].bonus > 0 && (
+                              <span className="font-black text-sm bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-display">
+                                +${currentTask.options[gameState.selectedOption].bonus} Bonus Tip
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs sm:text-sm font-medium leading-relaxed">
+                            {gameState.taskFeedback}
+                          </p>
+                        </div>
+
+                        <button
+                          id="next-task-btn"
+                          onClick={handleNextTask}
+                          className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-3.5 px-4 rounded-xl transition-all shadow-md active:translate-y-0.5 text-xs sm:text-sm uppercase tracking-wider font-display flex items-center justify-center gap-2"
+                        >
+                          {gameState.taskIndex < tasks.length - 1 ? "Continue Work Shift ➡️" : "Finish Shift & Review Paystub 🧾"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs font-bold text-slate-400">Shift Progress: {gameState.clicks * 20}%</p>
-
-                <button
-                  id="do-work-click"
-                  onClick={workShift}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md active:scale-95"
-                >
-                  {gameState.clicks < 4 ? "Do Work Task ⚙️" : "Complete Workday! 🎉"}
-                </button>
-              </div>
-            )}
+              );
+            })()}
 
             {gameState.stage === "paystub" && (
               <div className="space-y-6">
-                <div className="bg-white rounded-xl border-2 border-slate-200 p-6 shadow-md max-w-md mx-auto space-y-4">
+                <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-md max-w-md mx-auto space-y-4 text-left">
                   <div className="border-b border-dashed border-slate-200 pb-3 flex justify-between items-center">
                     <div>
-                      <h3 className="font-bold text-slate-800 text-sm">VIRTUAL PAYSTUB</h3>
-                      <p className="text-xs text-slate-400 font-semibold">Employee: Future Wealth Builder</p>
+                      <h3 className="font-black text-slate-900 text-base font-display">VIRTUAL PAYSTUB</h3>
+                      <p className="text-xs text-slate-500 font-semibold font-display">Employee: Future Wealth Builder</p>
                     </div>
-                    <span className="text-lg">💰</span>
+                    <span className="text-2xl">🧾</span>
                   </div>
 
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2.5 text-xs sm:text-sm">
                     <div className="flex justify-between font-semibold text-slate-600">
                       <span>Job Role</span>
-                      <span className="font-bold text-slate-800">{gameState.selectedJob?.name}</span>
+                      <span className="font-black text-slate-900 font-display">{gameState.selectedJob?.name}</span>
                     </div>
                     <div className="flex justify-between font-semibold text-slate-600">
                       <span>Hours Worked</span>
-                      <span className="font-bold text-slate-800">8.0 hrs</span>
+                      <span className="font-bold text-slate-800">8.0 hrs @ ${gameState.selectedJob?.wage}/hr</span>
                     </div>
-                    <div className="h-[1px] bg-slate-100" />
-                    <div className="flex justify-between font-bold text-slate-800">
-                      <span>Gross Pay (Earnings)</span>
-                      <span>${gameState.earnings}</span>
+                    <div className="flex justify-between font-semibold text-slate-600">
+                      <span>Base Shift Earnings</span>
+                      <span className="font-bold text-slate-800">${gameState.baseEarnings}</span>
                     </div>
-                    <div className="flex justify-between font-bold text-red-500 bg-red-50 px-2.5 py-1.5 rounded-lg mt-2">
-                      <span>Deduction: Taxes (20%)</span>
-                      <span>-${gameState.taxDeducted}</span>
+                    <div className="flex justify-between font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+                      <span>Quality & Performance Bonuses</span>
+                      <span>+${gameState.totalBonus}</span>
                     </div>
                     <div className="h-[1px] bg-slate-200" />
-                    <div className="flex justify-between font-bold text-base text-emerald-600 bg-emerald-50 px-2.5 py-2 rounded-lg">
-                      <span>Net Pay (Take-Home)</span>
+                    <div className="flex justify-between font-black text-slate-900 text-sm sm:text-base">
+                      <span>Gross Pay (Total Earnings)</span>
+                      <span>${gameState.grossPay}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-red-600 bg-red-50 px-2.5 py-1.5 rounded-lg">
+                      <span>Mandatory Deduction: Taxes (20%)</span>
+                      <span>-${gameState.taxDeducted}</span>
+                    </div>
+                    <div className="h-[2px] bg-slate-200" />
+                    <div className="flex justify-between font-black text-base sm:text-lg text-emerald-700 bg-emerald-100/70 border border-emerald-300 px-3 py-2 rounded-xl">
+                      <span>Net Pay (Take-Home Cash)</span>
                       <span>${gameState.netPay}</span>
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg text-sm text-blue-800 leading-relaxed font-semibold">
-                    🔍 <strong>Take-Home Lesson:</strong> See how your paycheck gets smaller? Gross pay is the total you earned. Net pay is what you keep after Taxes are deducted to pay for public libraries, roads, and fire departments!
+                  <div className="bg-sky-50 border border-sky-100 p-3.5 rounded-xl text-xs sm:text-sm text-sky-900 leading-relaxed font-medium space-y-1.5">
+                    <p className="font-bold text-sky-950 flex items-center gap-1.5 font-display text-sm">
+                      💡 Key Takeaway:
+                    </p>
+                    <p>
+                      Making thoughtful, high-quality decisions on the job earned you <strong>+${gameState.totalBonus} in performance bonuses</strong>!
+                    </p>
+                    <p className="text-slate-600 text-xs">
+                      Note that 20% of your gross earnings goes to taxes, which fund public schools, parks, emergency services, and community roads!
+                    </p>
                   </div>
                 </div>
 
                 <button
                   id="m2-complete"
                   onClick={completeSimulation}
-                  className="w-full max-w-xs mx-auto bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full max-w-xs mx-auto bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 font-display uppercase tracking-wider text-xs sm:text-sm"
                 >
                   Complete Lesson <Check className="w-5 h-5" />
                 </button>
