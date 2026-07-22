@@ -1024,10 +1024,62 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
           <div className="space-y-6">
             {gameState.stage === "setup" && (
               <div className="space-y-6">
-                <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                {/* Goal Explanation Box */}
+                <div className="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex items-start gap-3 text-left">
+                  <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 font-bold text-lg shadow-sm">
+                    🎯
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="font-black text-sky-950 text-sm sm:text-base font-display">Your Goal: Test Your $1,000 Budget Strategy!</h4>
+                    <p className="text-xs sm:text-sm text-sky-900 font-medium leading-relaxed">
+                      You have <strong>$1,000 monthly income</strong> to split across <strong>Needs</strong> (50%), <strong>Wants</strong> (30%), and <strong>Savings</strong> (20%). You can use the ➕ / ➖ buttons or strategy buttons below to customize your budget, then launch the simulation to see if your emergency fund survives unexpected expenses!
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-5 text-left">
+                  {/* Preset Buttons */}
+                  <div className="flex flex-wrap items-center gap-2 pb-2 border-b border-slate-100">
+                    <span className="text-xs font-black text-slate-400 font-display uppercase tracking-wider mr-1">Quick Strategy Presets:</span>
+                    <button
+                      onClick={() => setGameState((prev: any) => ({ ...prev, needs: 50, wants: 30, savings: 20 }))}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold font-display transition-all border ${
+                        gameState.needs === 50 && gameState.wants === 30 && gameState.savings === 20
+                          ? "bg-sky-500 text-white border-sky-600 shadow-sm"
+                          : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      }`}
+                    >
+                      ⚖️ Standard 50/30/20
+                    </button>
+                    <button
+                      onClick={() => setGameState((prev: any) => ({ ...prev, needs: 40, wants: 10, savings: 50 }))}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold font-display transition-all border ${
+                        gameState.needs === 40 && gameState.wants === 10 && gameState.savings === 50
+                          ? "bg-emerald-500 text-white border-emerald-600 shadow-sm"
+                          : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      }`}
+                    >
+                      🐷 High Saver (40/10/50)
+                    </button>
+                    <button
+                      onClick={() => setGameState((prev: any) => ({ ...prev, needs: 50, wants: 45, savings: 5 }))}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold font-display transition-all border ${
+                        gameState.needs === 50 && gameState.wants === 45 && gameState.savings === 5
+                          ? "bg-pink-500 text-white border-pink-600 shadow-sm"
+                          : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      }`}
+                    >
+                      🎮 Risky Fun (50/45/5)
+                    </button>
+                  </div>
+
                   <div className="flex justify-between items-center">
-                    <h3 className="font-bold text-slate-800 text-sm">Organize Your $1,000 Monthly Income</h3>
-                    <span className="text-xs font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200">
+                    <h3 className="font-black text-slate-900 text-sm sm:text-base font-display">Organize Your $1,000 Monthly Income</h3>
+                    <span className={`text-xs font-black px-3 py-1 rounded-full border font-display ${
+                      gameState.needs + gameState.wants + gameState.savings === 100
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        : "bg-amber-50 text-amber-700 border-amber-200"
+                    }`}>
                       Total Allocation: {gameState.needs + gameState.wants + gameState.savings}%
                     </span>
                   </div>
@@ -1035,66 +1087,65 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
                   <div className="space-y-6">
                     {/* Needs Slider */}
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-700 flex items-center gap-1.5">🍕 Needs (Food, Rent, Bills)</span>
-                        <span className="text-blue-600">{gameState.needs}% (${gameState.needs * 10})</span>
+                      <div className="flex justify-between text-xs font-bold">
+                        <span className="text-slate-800 flex items-center gap-1.5 font-display">🍕 Needs (Food, Rent, Bills)</span>
+                        <span className="text-sky-600 font-display text-sm">{gameState.needs}% (${gameState.needs * 10})</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <button id="minus-needs" onClick={() => handleBudgetChange("needs", -5)} className="p-1 bg-slate-100 rounded-lg hover:bg-slate-200"><Minus className="w-4 h-4 text-slate-600" /></button>
-                        <div className="flex-1 bg-slate-200 rounded-full h-2">
-                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${gameState.needs}%` }} />
+                        <button id="minus-needs" onClick={() => handleBudgetChange("needs", -5)} className="p-2 bg-slate-100 rounded-xl hover:bg-slate-200 active:scale-95 transition-all"><Minus className="w-4 h-4 text-slate-700" /></button>
+                        <div className="flex-1 bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                          <div className="bg-sky-500 h-full rounded-full transition-all duration-300" style={{ width: `${gameState.needs}%` }} />
                         </div>
-                        <button id="plus-needs" onClick={() => handleBudgetChange("needs", 5)} className="p-1 bg-slate-100 rounded-lg hover:bg-slate-200"><Plus className="w-4 h-4 text-slate-600" /></button>
+                        <button id="plus-needs" onClick={() => handleBudgetChange("needs", 5)} className="p-2 bg-slate-100 rounded-xl hover:bg-slate-200 active:scale-95 transition-all"><Plus className="w-4 h-4 text-slate-700" /></button>
                       </div>
                     </div>
 
                     {/* Wants Slider */}
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-700 flex items-center gap-1.5">🎮 Wants (Games, Concerts, Fun)</span>
-                        <span className="text-pink-600">{gameState.wants}% (${gameState.wants * 10})</span>
+                      <div className="flex justify-between text-xs font-bold">
+                        <span className="text-slate-800 flex items-center gap-1.5 font-display">🎮 Wants (Games, Concerts, Fun)</span>
+                        <span className="text-pink-600 font-display text-sm">{gameState.wants}% (${gameState.wants * 10})</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <button id="minus-wants" onClick={() => handleBudgetChange("wants", -5)} className="p-1 bg-slate-100 rounded-lg hover:bg-slate-200"><Minus className="w-4 h-4 text-slate-600" /></button>
-                        <div className="flex-1 bg-slate-200 rounded-full h-2">
-                          <div className="bg-pink-500 h-2 rounded-full" style={{ width: `${gameState.wants}%` }} />
+                        <button id="minus-wants" onClick={() => handleBudgetChange("wants", -5)} className="p-2 bg-slate-100 rounded-xl hover:bg-slate-200 active:scale-95 transition-all"><Minus className="w-4 h-4 text-slate-700" /></button>
+                        <div className="flex-1 bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                          <div className="bg-pink-500 h-full rounded-full transition-all duration-300" style={{ width: `${gameState.wants}%` }} />
                         </div>
-                        <button id="plus-wants" onClick={() => handleBudgetChange("wants", 5)} className="p-1 bg-slate-100 rounded-lg hover:bg-slate-200"><Plus className="w-4 h-4 text-slate-600" /></button>
+                        <button id="plus-wants" onClick={() => handleBudgetChange("wants", 5)} className="p-2 bg-slate-100 rounded-xl hover:bg-slate-200 active:scale-95 transition-all"><Plus className="w-4 h-4 text-slate-700" /></button>
                       </div>
                     </div>
 
                     {/* Savings Slider */}
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-700 flex items-center gap-1.5">🐷 Savings (Emergency Fund)</span>
-                        <span className="text-emerald-600">{gameState.savings}% (${gameState.savings * 10})</span>
+                      <div className="flex justify-between text-xs font-bold">
+                        <span className="text-slate-800 flex items-center gap-1.5 font-display">🐷 Savings (Emergency Shield)</span>
+                        <span className="text-emerald-600 font-display text-sm">{gameState.savings}% (${gameState.savings * 10})</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <button id="minus-savings" onClick={() => handleBudgetChange("savings", -5)} className="p-1 bg-slate-100 rounded-lg hover:bg-slate-200"><Minus className="w-4 h-4 text-slate-600" /></button>
-                        <div className="flex-1 bg-slate-200 rounded-full h-2">
-                          <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${gameState.savings}%` }} />
+                        <button id="minus-savings" onClick={() => handleBudgetChange("savings", -5)} className="p-2 bg-slate-100 rounded-xl hover:bg-slate-200 active:scale-95 transition-all"><Minus className="w-4 h-4 text-slate-700" /></button>
+                        <div className="flex-1 bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                          <div className="bg-emerald-500 h-full rounded-full transition-all duration-300" style={{ width: `${gameState.savings}%` }} />
                         </div>
-                        <button id="plus-savings" onClick={() => handleBudgetChange("savings", 5)} className="p-1 bg-slate-100 rounded-lg hover:bg-slate-200"><Plus className="w-4 h-4 text-slate-600" /></button>
+                        <button id="plus-savings" onClick={() => handleBudgetChange("savings", 5)} className="p-2 bg-slate-100 rounded-xl hover:bg-slate-200 active:scale-95 transition-all"><Plus className="w-4 h-4 text-slate-700" /></button>
                       </div>
                     </div>
                   </div>
-
-                  <p className="text-xs text-slate-400 italic text-center">
-                    Pro-tip: Try the standard 50% Needs, 30% Wants, and 20% Savings!
-                  </p>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center space-y-2">
                   <button
                     id="simulate-budget"
                     disabled={gameState.needs + gameState.wants + gameState.savings !== 100}
                     onClick={simulateBudgetMonth}
-                    className="bg-green-500 hover:bg-green-600 disabled:bg-slate-300 text-white font-bold py-3 px-8 rounded-xl shadow-md transition-all disabled:cursor-not-allowed text-sm"
+                    className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white font-black py-4 px-10 rounded-2xl shadow-md transition-all disabled:cursor-not-allowed text-xs sm:text-sm uppercase tracking-wider font-display border-b-4 border-emerald-700 active:translate-y-0.5"
                   >
                     {gameState.needs + gameState.wants + gameState.savings === 100
                       ? "Launch 'Life Happens' Month Simulation! 🚀"
-                      : `Must equal exactly 100% (Current: ${gameState.needs + gameState.wants + gameState.savings}%)`}
+                      : `Must Equal Exactly 100% (Current: ${gameState.needs + gameState.wants + gameState.savings}%)`}
                   </button>
+                  <p className="text-xs text-slate-500 font-medium">
+                    Clicking the green button above simulates 1 month of random surprise expenses to see if your emergency savings survive!
+                  </p>
                 </div>
               </div>
             )}
