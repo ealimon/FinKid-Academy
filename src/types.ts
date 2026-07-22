@@ -15,6 +15,8 @@ export interface UserProgress {
   longestStreak?: number;
   streakFreezes?: number;
   streakCalendar?: string[]; // e.g., ["Mon", "Tue"]
+  lastActiveDate?: string; // YYYY-MM-DD
+  activityDates?: string[]; // Array of YYYY-MM-DD dates completed
 }
 
 export interface Badge {

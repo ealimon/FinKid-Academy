@@ -13,6 +13,11 @@ import AvatarCustomizer from "./components/AvatarCustomizer";
 import FinnyChat from "./components/FinnyChat";
 import ModuleWorksheet from "./components/ModuleWorksheet";
 import StreakModal from "./components/StreakModal";
+import { 
+  evaluateUserStreakOnLoad, 
+  recordActivityForToday, 
+  getCurrentWeekDays 
+} from "./utils/streakUtils";
 
 const STORAGE_KEY = "finance_quest_academy_progress";
 
@@ -24,10 +29,11 @@ const DEFAULT_PROGRESS: UserProgress = {
   badges: [],
   unlockedAvatarItems: [],
   equippedAvatarItems: {},
-  streakCount: 3,
-  longestStreak: 5,
+  streakCount: 0,
+  longestStreak: 0,
   streakFreezes: 1,
-  streakCalendar: ["Mon", "Tue", "Wed"]
+  streakCalendar: [],
+  activityDates: []
 };
 
 export default function App() {
@@ -38,15 +44,26 @@ export default function App() {
   const [moduleStage, setModuleStage] = useState<"intro" | "game" | "quiz" | "complete">("intro");
   const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
 
-  // Load progress from LocalStorage on mount
+  // Load progress from LocalStorage on mount & evaluate streak
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
+    let loadedProgress = DEFAULT_PROGRESS;
+
     if (saved) {
       try {
-        setProgress(JSON.parse(saved));
+        loadedProgress = { ...DEFAULT_PROGRESS, ...JSON.parse(saved) };
       } catch (e) {
         console.error("Failed to load user progress:", e);
       }
+    }
+
+    // Run real daily date streak evaluation
+    const { updatedProgress, notificationMessage } = evaluateUserStreakOnLoad(loadedProgress);
+    setProgress(updatedProgress);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedProgress));
+
+    if (notificationMessage) {
+      console.log("Streak status update:", notificationMessage);
     }
   }, []);
 
@@ -110,34 +127,13 @@ export default function App() {
       ? progress.badges 
       : [...progress.badges, activeModule.badge.id];
 
-    // Streak logic when mastering a lesson
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const todayName = days[new Date().getDay()];
-    const currentCalendar = progress.streakCalendar ?? ["Mon", "Tue", "Wed"];
-    
-    let updatedCalendar = [...currentCalendar];
-    let updatedStreakCount = progress.streakCount ?? 3;
-    let updatedLongest = progress.longestStreak ?? 5;
-    let milestoneCoins = 0;
-
-    if (!updatedCalendar.includes(todayName)) {
-      updatedCalendar.push(todayName);
-      updatedStreakCount += 1;
-      updatedLongest = Math.max(updatedStreakCount, updatedLongest);
-
-      if (updatedStreakCount === 4) {
-        milestoneCoins = 30;
-      } else if (updatedStreakCount === 7) {
-        milestoneCoins = 100;
-      } else if (updatedStreakCount === 14) {
-        milestoneCoins = 250;
-      }
-    }
+    // Record today's activity in streak engine
+    const { updatedProgress: streakProgress, milestoneCoinsBonus } = recordActivityForToday(progress);
 
     // Accumulate rewards
-    let newXp = progress.xp + activeModule.xpReward;
-    let newCoins = progress.coins + activeModule.coinReward + milestoneCoins;
-    let newLevel = progress.level;
+    let newXp = streakProgress.xp + activeModule.xpReward;
+    let newCoins = streakProgress.coins + activeModule.coinReward + milestoneCoinsBonus;
+    let newLevel = streakProgress.level;
 
     while (newXp >= getXpThreshold(newLevel)) {
       newXp -= getXpThreshold(newLevel);
@@ -145,15 +141,12 @@ export default function App() {
     }
     
     saveProgress({
-      ...progress,
+      ...streakProgress,
       xp: newXp,
       coins: newCoins,
       level: newLevel,
       completedModules: updatedCompleted,
-      badges: updatedBadges,
-      streakCount: updatedStreakCount,
-      longestStreak: updatedLongest,
-      streakCalendar: updatedCalendar
+      badges: updatedBadges
     });
 
     setModuleStage("complete");
@@ -289,25 +282,29 @@ export default function App() {
                   <div className="flex items-center gap-2.5">
                     <span className="text-3xl filter drop-shadow animate-pulse">🔥</span>
                     <div className="text-left">
-                      <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest leading-none">DAILY STREAK</p>
+                      <p className="text-xs font-black text-rose-500 uppercase tracking-widest leading-none">DAILY STREAK</p>
                       <h4 className="font-black text-rose-900 text-base font-display mt-0.5">
-                        {progress.streakCount ?? 3} Days Hot!
+                        {progress.streakCount ?? 0} Day{(progress.streakCount ?? 0) === 1 ? "" : "s"} Hot!
                       </h4>
                     </div>
                   </div>
-                  <span className="text-xs font-black bg-rose-500 hover:bg-rose-600 text-white px-2 py-1 rounded-xl uppercase tracking-wider group-hover:scale-105 transition-all shadow-sm">
+                  <span className="text-xs font-black bg-rose-500 hover:bg-rose-600 text-white px-2.5 py-1 rounded-xl uppercase tracking-wider group-hover:scale-105 transition-all shadow-sm">
                     View 📅
                   </span>
                 </div>
                 <div className="mt-3 flex gap-1 justify-between text-center">
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => {
-                    const active = (progress.streakCalendar ?? ["Mon", "Tue", "Wed"]).includes(d);
+                  {getCurrentWeekDays().map(({ dayName, dateStr, isToday }) => {
+                    const active = (progress.activityDates ?? []).includes(dateStr) || (progress.streakCalendar ?? []).includes(dayName);
                     return (
-                      <div key={d} className="flex-1">
-                        <div className={`w-7 h-7 mx-auto rounded-lg flex items-center justify-center text-[11px] font-black transition-all ${
-                          active ? "bg-rose-500 text-white shadow-sm" : "bg-slate-100 text-slate-400 border border-slate-200/60"
+                      <div key={dateStr} className="flex-1">
+                        <div className={`w-8 h-8 mx-auto rounded-lg flex items-center justify-center text-xs font-black transition-all ${
+                          active 
+                            ? "bg-rose-500 text-white shadow-sm" 
+                            : isToday 
+                            ? "bg-amber-200 text-amber-900 border border-amber-400 font-bold" 
+                            : "bg-slate-100 text-slate-400 border border-slate-200/60"
                         }`}>
-                          {active ? "🔥" : d[0]}
+                          {active ? "🔥" : dayName[0]}
                         </div>
                       </div>
                     );

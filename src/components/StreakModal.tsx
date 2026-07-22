@@ -4,6 +4,7 @@ import {
   X, Flame, Zap, Shield, Sparkles, Snowflake, AlertTriangle, HelpCircle, ArrowRight
 } from "lucide-react";
 import { UserProgress } from "../types";
+import { getCurrentWeekDays, getTodayFormatted, recordActivityForToday } from "../utils/streakUtils";
 
 interface StreakModalProps {
   isOpen: boolean;
@@ -18,12 +19,13 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
   if (!isOpen) return null;
 
   // Defaults
-  const streakCount = progress.streakCount ?? 3;
-  const longestStreak = progress.longestStreak ?? 5;
+  const streakCount = progress.streakCount ?? 0;
+  const longestStreak = progress.longestStreak ?? 0;
   const streakFreezes = progress.streakFreezes ?? 1;
-  const streakCalendar = progress.streakCalendar ?? ["Mon", "Tue", "Wed"];
+  const activityDates = progress.activityDates ?? [];
+  const streakCalendar = progress.streakCalendar ?? [];
 
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekDays = getCurrentWeekDays();
 
   // Buy Streak Freeze (insurance)
   const buyFreeze = () => {
@@ -38,20 +40,20 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
     setSimulationMsg("❄️ Purchased 1 Streak Freeze! Your streak is now protected against missed days.");
   };
 
-  // Simulate Check-In for a day
-  const simulateCheckIn = (day: string) => {
-    if (streakCalendar.includes(day)) {
-      setSimulationMsg(`✨ You already studied on ${day}! Pick another day to practice.`);
+  // Check in for a specific day in current week
+  const simulateCheckInForDay = (dateStr: string, dayName: string) => {
+    if (activityDates.includes(dateStr) || streakCalendar.includes(dayName)) {
+      setSimulationMsg(`✨ Activity already logged for ${dayName} (${dateStr})! Pick another day to practice.`);
       return;
     }
 
-    const updatedCalendar = [...streakCalendar, day];
+    const updatedActivityDates = [...activityDates, dateStr];
+    const updatedCalendar = [...streakCalendar, dayName];
     const updatedStreak = streakCount + 1;
     const updatedLongest = Math.max(updatedStreak, longestStreak);
     let coinsBonus = 0;
     let bonusMsg = "";
 
-    // Milestone checks
     if (updatedStreak === 4) {
       coinsBonus = 30;
       bonusMsg = " 🎉 +30 Coins Milestone Bonus!";
@@ -66,11 +68,13 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
     onUpdateProgress({
       streakCount: updatedStreak,
       longestStreak: updatedLongest,
+      lastActiveDate: dateStr,
+      activityDates: updatedActivityDates,
       streakCalendar: updatedCalendar,
       coins: progress.coins + coinsBonus
     });
 
-    setSimulationMsg(`🔥 Checked in for ${day}! Streak increased to ${updatedStreak} days!${bonusMsg}`);
+    setSimulationMsg(`🔥 Checked in for ${dayName} (${dateStr})! Streak increased to ${updatedStreak} days!${bonusMsg}`);
   };
 
   // Simulate missed day (to demonstrate how Streak Freezes work as "insurance")
@@ -78,18 +82,17 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
     if (streakFreezes > 0) {
       // Consume a freeze to protect streak
       onUpdateProgress({
-        streakFreezes: streakFreezes - 1,
-        // Clear calendar to simulate a new week but preserve streak!
-        streakCalendar: ["Mon"] 
+        streakFreezes: streakFreezes - 1
       });
-      setSimulationMsg("❄️ Streak Freeze Activated! You missed a day, but your streak freeze saved your 3+ day streak from resetting!");
+      setSimulationMsg("❄️ Streak Freeze Activated! You missed a day, but your streak freeze saved your streak from resetting!");
     } else {
       // Reset streak!
       onUpdateProgress({
         streakCount: 0,
-        streakCalendar: []
+        streakCalendar: [],
+        activityDates: []
       });
-      setSimulationMsg("😢 Oh no! You missed a day without a Streak Freeze. Your learning streak reset to 0. Learn a lesson or click a weekday to fire it up again!");
+      setSimulationMsg("😢 Oh no! You missed a day without a Streak Freeze. Your learning streak reset to 0. Finish a lesson today to fire it up again!");
     }
   };
 
@@ -97,9 +100,10 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
   const resetSimulationCalendar = () => {
     onUpdateProgress({
       streakCalendar: [],
+      activityDates: [],
       streakCount: 0
     });
-    setSimulationMsg("⏳ Time warped! All calendar days cleared. Click days to check in and rebuild your streak!");
+    setSimulationMsg("⏳ Reset complete! Calendar cleared. Complete lessons on consecutive days to build your real streak!");
   };
 
   // Calculate milestone percentage
@@ -152,28 +156,34 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
                 </span>
               </div>
 
-              <div className="grid grid-cols-7 gap-2">
-                {daysOfWeek.map((day) => {
-                  const isCompleted = streakCalendar.includes(day);
+              <div className="grid grid-cols-7 gap-1.5">
+                {weekDays.map(({ dayName, dateStr, isToday }) => {
+                  const isCompleted = activityDates.includes(dateStr) || streakCalendar.includes(dayName);
                   return (
                     <button
-                      key={day}
-                      onClick={() => simulateCheckIn(day)}
-                      title={`Click to check in for ${day}`}
-                      className={`flex flex-col items-center justify-between p-2.5 rounded-2xl border-2 transition-all hover:scale-105 active:scale-95 ${
+                      key={dateStr}
+                      onClick={() => simulateCheckInForDay(dateStr, dayName)}
+                      title={`Click to check in for ${dayName} (${dateStr})`}
+                      className={`flex flex-col items-center justify-between p-2 rounded-2xl border-2 transition-all hover:scale-105 active:scale-95 ${
                         isCompleted
-                          ? "bg-rose-50 border-rose-300 shadow-[0_4px_0_0_#fecdd3]"
+                          ? "bg-rose-50 border-rose-300 shadow-[0_3px_0_0_#fecdd3]"
+                          : isToday
+                          ? "bg-amber-50 border-amber-300 text-amber-700 font-bold animate-pulse"
                           : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-400"
                       }`}
                     >
-                      <span className="text-[10px] font-black uppercase">{day}</span>
-                      <div className="my-2 text-xl filter drop-shadow">
-                        {isCompleted ? "🔥" : "⚪"}
+                      <span className="text-xs font-black uppercase">{dayName}</span>
+                      <div className="my-1.5 text-xl filter drop-shadow">
+                        {isCompleted ? "🔥" : isToday ? "⭐" : "⚪"}
                       </div>
-                      <span className={`text-[9px] font-black uppercase px-1 rounded ${
-                        isCompleted ? "bg-rose-100 text-rose-700" : "bg-slate-200 text-slate-500"
+                      <span className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded ${
+                        isCompleted 
+                          ? "bg-rose-100 text-rose-700" 
+                          : isToday 
+                          ? "bg-amber-200 text-amber-800" 
+                          : "bg-slate-200 text-slate-500"
                       }`}>
-                        {isCompleted ? "DONE" : "MISS"}
+                        {isCompleted ? "DONE" : isToday ? "TODAY" : "MISS"}
                       </span>
                     </button>
                   );
@@ -204,7 +214,7 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
                 />
               </div>
 
-              <div className="flex justify-between text-[10px] font-black text-amber-800">
+              <div className="flex justify-between text-xs font-black text-amber-800">
                 <span>Current: {streakCount} Days</span>
                 <span className="flex items-center gap-1">
                   🎁 Next: +{nextMilestone === 4 ? "30" : nextMilestone === 7 ? "100" : "250"} Coins
@@ -215,11 +225,11 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
             {/* Stats Grill */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-slate-50 border-2 border-slate-100 p-3.5 rounded-2xl text-center">
-                <p className="text-[10px] font-black text-slate-400 uppercase">Longest Streak</p>
+                <p className="text-xs font-black text-slate-400 uppercase">Longest Streak</p>
                 <p className="text-2xl font-black text-slate-800 font-display mt-0.5">👑 {longestStreak} Days</p>
               </div>
               <div className="bg-slate-50 border-2 border-slate-100 p-3.5 rounded-2xl text-center relative overflow-hidden">
-                <p className="text-[10px] font-black text-slate-400 uppercase flex items-center justify-center gap-1">
+                <p className="text-xs font-black text-slate-400 uppercase flex items-center justify-center gap-1">
                   <Snowflake className="w-3.5 h-3.5 text-sky-400" /> STREAK FREEZE
                 </p>
                 <p className="text-2xl font-black text-sky-600 font-display mt-0.5">{streakFreezes} Owned</p>
@@ -231,7 +241,7 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-sky-50 border border-sky-100 text-xs p-3.5 rounded-2xl text-sky-800 font-semibold leading-relaxed flex items-start gap-2.5 shadow-inner"
+                className="bg-sky-50 border border-sky-100 text-xs sm:text-sm p-3.5 rounded-2xl text-sky-800 font-semibold leading-relaxed flex items-start gap-2.5 shadow-inner"
               >
                 <span className="text-lg">🦉</span>
                 <div>
@@ -245,10 +255,10 @@ export default function StreakModal({ isOpen, onClose, progress, onUpdateProgres
             <div className="bg-sky-50/50 border border-sky-100 rounded-2xl p-4 flex gap-3 text-left">
               <span className="text-2xl">💡</span>
               <div className="space-y-1">
-                <h5 className="font-black text-sky-900 text-xs uppercase tracking-wide">
+                <h5 className="font-black text-sky-900 text-xs sm:text-sm uppercase tracking-wide">
                   Financial Connection: Streak Freeze & Insurance
                 </h5>
-                <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                   A <strong>Streak Freeze</strong> works exactly like <strong>Insurance</strong>! You pay a small premium (50 Coins) to guard against a large loss (losing a 10-day streak!). Just like an emergency fund or medical insurance, it keeps you secure when the unexpected happens!
                 </p>
               </div>
