@@ -37,8 +37,16 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
         stage: "select" // select, work, paystub
       });
     } else if (module.id === "m3") {
-      // 6-Month Budget Simulation
+      // Needs vs Wants & Budget Simulation
       setGameState({
+        activeTab: "sorter", // "sorter" | "allocator" | "simulation"
+        sorterIndex: 0,
+        sorterScore: 0,
+        sorterFeedback: null,
+        sorterCompleted: false,
+        needsPercent: 50,
+        wantsPercent: 30,
+        savingsPercent: 20,
         monthIndex: 0,
         savings: 0,
         totalIncome: 0,
@@ -527,6 +535,53 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
     }
   ];
 
+  // Needs vs Wants Sorter Items
+  const NEEDS_WANTS_ITEMS = [
+    { id: 1, name: "Fresh Vegetables & Groceries", icon: "🥦", type: "need", description: "Essential food required for basic nutrition, health, and energy." },
+    { id: 2, name: "Latest Video Game Console", icon: "🎮", type: "want", description: "Awesome entertainment, but not required to survive." },
+    { id: 3, name: "Monthly Rent & Safe Shelter", icon: "🏠", type: "need", description: "A safe home and roof over your head is a critical Need." },
+    { id: 4, name: "Front-Row Concert Tickets", icon: "🎟️", type: "want", description: "An exciting live show, but strictly a luxury Want." },
+    { id: 5, name: "Home Electricity & Heating Bill", icon: "⚡", type: "need", description: "Powers your home lights, refrigerator, and winter heating." },
+    { id: 6, name: "Designer $200 Sneakers", icon: "👟", type: "want", description: "Basic protective shoes are a need, but expensive designer sneakers are a want." },
+    { id: 7, name: "Clean Utility Water Bill", icon: "💧", type: "need", description: "Clean drinking and washing water is essential for health." },
+    { id: 8, name: "Gourmet Bakery Dessert Delivery", icon: "🍰", type: "want", description: "A delicious sweet treat to enjoy occasionally, not a basic need." }
+  ];
+
+  const handleClassifySorterItem = (itemType: "need" | "want") => {
+    const sIdx = typeof gameState.sorterIndex === "number" ? gameState.sorterIndex : 0;
+    const currentItem = NEEDS_WANTS_ITEMS[sIdx] || NEEDS_WANTS_ITEMS[0];
+    const isCorrect = itemType === currentItem.type;
+
+    setGameState((prev: any) => ({
+      ...prev,
+      sorterScore: isCorrect ? (prev.sorterScore || 0) + 1 : (prev.sorterScore || 0),
+      sorterFeedback: {
+        isCorrect,
+        text: isCorrect
+          ? `Correct! "${currentItem.name}" is a ${currentItem.type.toUpperCase()}. ${currentItem.description}`
+          : `Oops! "${currentItem.name}" is actually a ${currentItem.type.toUpperCase()}. ${currentItem.description}`
+      }
+    }));
+  };
+
+  const handleNextSorterItem = () => {
+    setGameState((prev: any) => {
+      const nextIdx = (prev.sorterIndex || 0) + 1;
+      if (nextIdx >= NEEDS_WANTS_ITEMS.length) {
+        return {
+          ...prev,
+          sorterCompleted: true,
+          sorterFeedback: null
+        };
+      }
+      return {
+        ...prev,
+        sorterIndex: nextIdx,
+        sorterFeedback: null
+      };
+    });
+  };
+
   const handleSelectSimulationOption = (type: "need" | "want" | "side", optionIndex: number) => {
     setGameState((prev: any) => ({
       ...prev,
@@ -536,15 +591,20 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
 
   const handleCompleteSimulationMonth = () => {
     setGameState((prev: any) => {
-      const monthData = SIMULATION_MONTHS[prev.monthIndex];
+      const mIdx = typeof prev.monthIndex === "number" ? prev.monthIndex : 0;
+      const monthData = SIMULATION_MONTHS[mIdx] || SIMULATION_MONTHS[0];
       const fixedNeedsSum = monthData.fixedNeeds.reduce((acc, curr) => acc + curr.amount, 0);
-      const varNeedCost = prev.selectedNeed !== null ? monthData.variableNeedOptions.options[prev.selectedNeed].cost : 0;
+      const varNeedCost = typeof prev.selectedNeed === "number" && monthData.variableNeedOptions.options[prev.selectedNeed]
+        ? monthData.variableNeedOptions.options[prev.selectedNeed].cost
+        : 0;
       const totalMonthNeeds = fixedNeedsSum + varNeedCost;
 
-      const wantCost = prev.selectedWant !== null ? monthData.wantOptions.options[prev.selectedWant].cost : 0;
+      const wantCost = typeof prev.selectedWant === "number" && monthData.wantOptions.options[prev.selectedWant]
+        ? monthData.wantOptions.options[prev.selectedWant].cost
+        : 0;
 
       let sideIncomeOrExpense = 0;
-      if (monthData.sideEvent && prev.selectedSide !== null) {
+      if (monthData.sideEvent && typeof prev.selectedSide === "number" && monthData.sideEvent.options[prev.selectedSide]) {
         sideIncomeOrExpense = monthData.sideEvent.options[prev.selectedSide].amount;
       }
 
@@ -553,9 +613,9 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
 
       const netSurplus = totalMonthIncome - (totalMonthNeeds + wantCost + extraExpense);
 
-      // Interest on existing savings balance
-      const interestEarned = Math.round(prev.savings * 0.005); // 0.5% monthly interest
-      const newSavings = Math.max(0, prev.savings + interestEarned + netSurplus);
+      const currSavings = typeof prev.savings === "number" ? prev.savings : 0;
+      const interestEarned = Math.round(currSavings * 0.005);
+      const newSavings = Math.max(0, currSavings + interestEarned + netSurplus);
 
       const monthSummaryLog = {
         monthName: monthData.monthName,
@@ -570,12 +630,12 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
       return {
         ...prev,
         savings: newSavings,
-        totalIncome: prev.totalIncome + totalMonthIncome,
-        totalNeeds: prev.totalNeeds + totalMonthNeeds,
-        totalWants: prev.totalWants + wantCost + extraExpense,
+        totalIncome: (prev.totalIncome || 0) + totalMonthIncome,
+        totalNeeds: (prev.totalNeeds || 0) + totalMonthNeeds,
+        totalWants: (prev.totalWants || 0) + wantCost + extraExpense,
         lastMonthNet: netSurplus,
         lastInterestEarned: interestEarned,
-        monthHistory: [...prev.monthHistory, monthSummaryLog],
+        monthHistory: [...(prev.monthHistory || []), monthSummaryLog],
         stage: "month_summary"
       };
     });
@@ -583,7 +643,7 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
 
   const handleNextSimulationMonth = () => {
     setGameState((prev: any) => {
-      const nextMonthIdx = prev.monthIndex + 1;
+      const nextMonthIdx = (prev.monthIndex || 0) + 1;
       if (nextMonthIdx >= SIMULATION_MONTHS.length) {
         return {
           ...prev,
@@ -1237,444 +1297,709 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
           </div>
         )}
 
-        {/* MODULE 3: 6-MONTH REAL-LIFE BUDGET SIMULATION */}
+        {/* MODULE 3: NEEDS VS WANTS & 6-MONTH BUDGET SIMULATION */}
         {module.id === "m3" && (() => {
-          const currentMonthData = SIMULATION_MONTHS[gameState.monthIndex || 0];
-          const isMonthComplete = gameState.selectedNeed !== null && gameState.selectedWant !== null && (!currentMonthData.sideEvent || gameState.selectedSide !== null);
+          const activeTab = gameState.activeTab || "sorter";
 
-          // Calculate running totals for current month preview
+          const currentMonthIdx = typeof gameState.monthIndex === "number" ? gameState.monthIndex : 0;
+          const currentMonthData = SIMULATION_MONTHS[currentMonthIdx] || SIMULATION_MONTHS[0];
+
+          const isNeedSelected = typeof gameState.selectedNeed === "number";
+          const isWantSelected = typeof gameState.selectedWant === "number";
+          const isSideSelected = !currentMonthData.sideEvent || typeof gameState.selectedSide === "number";
+          const isMonthComplete = isNeedSelected && isWantSelected && isSideSelected;
+
           const fixedNeedsSum = currentMonthData.fixedNeeds.reduce((acc, curr) => acc + curr.amount, 0);
-          const varNeedCost = gameState.selectedNeed !== null ? currentMonthData.variableNeedOptions.options[gameState.selectedNeed].cost : 0;
+          const varNeedCost = isNeedSelected && currentMonthData.variableNeedOptions.options[gameState.selectedNeed]
+            ? currentMonthData.variableNeedOptions.options[gameState.selectedNeed].cost
+            : 0;
           const totalMonthNeeds = fixedNeedsSum + varNeedCost;
 
-          const wantCost = gameState.selectedWant !== null ? currentMonthData.wantOptions.options[gameState.selectedWant].cost : 0;
+          const wantCost = isWantSelected && currentMonthData.wantOptions.options[gameState.selectedWant]
+            ? currentMonthData.wantOptions.options[gameState.selectedWant].cost
+            : 0;
 
           let sideAmount = 0;
-          if (currentMonthData.sideEvent && gameState.selectedSide !== null) {
+          if (currentMonthData.sideEvent && typeof gameState.selectedSide === "number" && currentMonthData.sideEvent.options[gameState.selectedSide]) {
             sideAmount = currentMonthData.sideEvent.options[gameState.selectedSide].amount;
           }
 
           const monthIncomeTotal = currentMonthData.income + (sideAmount > 0 ? sideAmount : 0);
           const monthExtraExpense = sideAmount < 0 ? Math.abs(sideAmount) : 0;
-
           const monthNetCash = monthIncomeTotal - (totalMonthNeeds + wantCost + monthExtraExpense);
 
           return (
             <div className="space-y-6 text-left">
-              {/* Header Step Indicator: January through June */}
-              <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-sm space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{currentMonthData.seasonIcon}</span>
-                    <div>
-                      <h3 className="font-black text-slate-900 text-base sm:text-lg font-display">
-                        Month {gameState.monthIndex + 1}: {currentMonthData.monthName}
-                      </h3>
-                      <p className="text-xs font-bold text-sky-600 font-display">
-                        {currentMonthData.motto}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Bank Accounts Bar */}
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl flex items-center gap-2">
-                      <span className="text-base">💳</span>
-                      <div>
-                        <span className="block text-[10px] font-black uppercase text-sky-600 tracking-wider">Checking</span>
-                        <span className="font-black text-sky-950 text-xs sm:text-sm font-display">+${monthIncomeTotal}</span>
-                      </div>
-                    </div>
-                    <div className="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-2">
-                      <span className="text-base">🐷</span>
-                      <div>
-                        <span className="block text-[10px] font-black uppercase text-emerald-600 tracking-wider">Savings</span>
-                        <span className="font-black text-emerald-950 text-xs sm:text-sm font-display">${gameState.savings}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Month Progress Pills */}
-                <div className="grid grid-cols-6 gap-1 sm:gap-2 pt-1 border-t border-slate-100">
-                  {SIMULATION_MONTHS.map((m, idx) => (
-                    <div
-                      key={idx}
-                      className={`py-1.5 rounded-xl text-center text-[10px] sm:text-xs font-black font-display transition-all border ${
-                        idx === gameState.monthIndex
-                          ? "bg-sky-500 text-white border-sky-600 shadow-sm scale-105"
-                          : idx < gameState.monthIndex
-                          ? "bg-emerald-100 text-emerald-800 border-emerald-300"
-                          : "bg-slate-100 text-slate-400 border-slate-200 opacity-60"
-                      }`}
-                    >
-                      <span className="hidden sm:inline">{m.monthName}</span>
-                      <span className="sm:hidden">{m.monthName.substring(0, 3)}</span>
-                      {idx < gameState.monthIndex && " ✓"}
-                    </div>
-                  ))}
-                </div>
+              {/* TOP MODE TABS SELECTOR */}
+              <div className="bg-white rounded-2xl border-2 border-sky-100 p-2 shadow-sm flex flex-wrap gap-2">
+                {[
+                  { id: "sorter", label: "🍕 1. Needs vs Wants Sorter" },
+                  { id: "allocator", label: "📊 2. 50/30/20 Rule Allocator" },
+                  { id: "simulation", label: "🗓️ 3. 6-Month Real Simulation" }
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setGameState((prev: any) => ({ ...prev, activeTab: tab.id }))}
+                    className={`flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black font-display transition-all ${
+                      activeTab === tab.id
+                        ? "bg-sky-500 text-white shadow-md scale-[1.02]"
+                        : "bg-slate-50 hover:bg-sky-50 text-slate-600 border border-slate-200"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
 
-              {gameState.stage === "monthly_play" && (
-                <div className="space-y-6">
-                  {/* Step 1: Fixed Bills & Needs */}
-                  <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 font-black text-xs flex items-center justify-center font-display">1</span>
-                        <h4 className="font-black text-slate-900 text-sm sm:text-base font-display">Fixed Bills & Needs (Due First)</h4>
+              {/* TAB 1: NEEDS VS WANTS ITEM SORTER */}
+              {activeTab === "sorter" && (() => {
+                const sIdx = typeof gameState.sorterIndex === "number" ? gameState.sorterIndex : 0;
+                const item = NEEDS_WANTS_ITEMS[sIdx] || NEEDS_WANTS_ITEMS[0];
+                const isCompleted = gameState.sorterCompleted || sIdx >= NEEDS_WANTS_ITEMS.length;
+
+                if (isCompleted) {
+                  return (
+                    <div className="bg-white rounded-3xl border-2 border-emerald-200 p-6 sm:p-8 shadow-md text-center max-w-lg mx-auto space-y-5">
+                      <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner">
+                        🏆
                       </div>
-                      <span className="text-xs font-black bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200 font-display">
-                        Total Fixed: -${fixedNeedsSum}
-                      </span>
+                      <div className="space-y-1">
+                        <h3 className="font-black text-slate-900 text-2xl font-display">Sorting Master!</h3>
+                        <p className="text-sm text-slate-600 font-medium">
+                          You scored <span className="font-black text-emerald-600">{gameState.sorterScore || 0} out of {NEEDS_WANTS_ITEMS.length}</span> correct!
+                        </p>
+                      </div>
+                      <p className="text-xs text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-200 font-medium leading-relaxed">
+                        🌟 Key Takeaway: <strong>Needs</strong> are necessities for survival & health ( shelter, water, groceries, utilities ). <strong>Wants</strong> are fun desires ( games, concerts, designer gear ).
+                      </p>
+                      <button
+                        onClick={() => setGameState((prev: any) => ({ ...prev, activeTab: "allocator" }))}
+                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-xl shadow-md transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-emerald-700 active:translate-y-0.5"
+                      >
+                        Next Activity: Try 50/30/20 Budget Allocator 📊 ➡️
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="bg-white rounded-3xl border-2 border-sky-100 p-6 sm:p-8 shadow-md space-y-6 max-w-xl mx-auto">
+                    {/* Header Score bar */}
+                    <div className="flex items-center justify-between border-b border-sky-100 pb-4">
+                      <div>
+                        <span className="text-xs font-black uppercase tracking-wider text-sky-600 font-display">
+                          Item {sIdx + 1} of {NEEDS_WANTS_ITEMS.length}
+                        </span>
+                        <h3 className="font-black text-slate-900 text-lg font-display">Categorize This Item!</h3>
+                      </div>
+                      <div className="bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-2xl">
+                        <span className="text-xs font-black text-emerald-700 font-display">Score: {gameState.sorterScore || 0} pts</span>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                      {currentMonthData.fixedNeeds.map((item, idx) => (
-                        <div key={idx} className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex justify-between items-center font-semibold text-slate-700">
-                          <span>{item.name}</span>
-                          <span className="font-bold text-rose-600">-${item.amount}</span>
+                    {/* Active Item Card */}
+                    <div className="bg-sky-50/60 border-2 border-sky-200 p-6 rounded-3xl text-center space-y-3">
+                      <span className="text-6xl block animate-bounce">{item.icon}</span>
+                      <h4 className="font-black text-slate-900 text-xl font-display">{item.name}</h4>
+                      <p className="text-xs text-slate-600 font-medium max-w-xs mx-auto">
+                        Is this item an essential <strong>Need</strong> or a non-essential <strong>Want</strong>?
+                      </p>
+                    </div>
+
+                    {/* Sorter Buttons */}
+                    {!gameState.sorterFeedback ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        <button
+                          onClick={() => handleClassifySorterItem("need")}
+                          className="bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 px-3 rounded-2xl shadow-md transition-all font-display text-sm sm:text-base border-b-4 border-emerald-700 active:translate-y-0.5 flex flex-col items-center gap-1"
+                        >
+                          <span className="text-xl">🥦</span>
+                          <span>NEED (Essential)</span>
+                        </button>
+                        <button
+                          onClick={() => handleClassifySorterItem("want")}
+                          className="bg-pink-500 hover:bg-pink-600 text-white font-black py-4 px-3 rounded-2xl shadow-md transition-all font-display text-sm sm:text-base border-b-4 border-pink-700 active:translate-y-0.5 flex flex-col items-center gap-1"
+                        >
+                          <span className="text-xl">🎮</span>
+                          <span>WANT (Luxury)</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className={`p-4 rounded-2xl border-2 text-xs sm:text-sm font-semibold space-y-1 ${
+                          gameState.sorterFeedback.isCorrect ? "bg-emerald-50 border-emerald-300 text-emerald-950" : "bg-amber-50 border-amber-300 text-amber-950"
+                        }`}>
+                          <p className="font-bold flex items-center gap-1.5 font-display text-sm">
+                            {gameState.sorterFeedback.isCorrect ? "✅ " : "💡 "}{gameState.sorterFeedback.text}
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={handleNextSorterItem}
+                          className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-4 rounded-xl shadow-md transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-sky-700 active:translate-y-0.5"
+                        >
+                          {sIdx + 1 < NEEDS_WANTS_ITEMS.length ? "Next Item ➡️" : "View Final Score 🏆 ➡️"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* TAB 2: 50/30/20 BUDGET ALLOCATOR */}
+              {activeTab === "allocator" && (() => {
+                const income = 1000;
+                const needsPct = gameState.needsPercent || 50;
+                const wantsPct = gameState.wantsPercent || 30;
+                const savingsPct = gameState.savingsPercent || 20;
+
+                const needsDollar = (income * needsPct) / 100;
+                const wantsDollar = (income * wantsPct) / 100;
+                const savingsDollar = (income * savingsPct) / 100;
+
+                return (
+                  <div className="bg-white rounded-3xl border-2 border-sky-100 p-6 sm:p-8 shadow-md space-y-6 max-w-xl mx-auto">
+                    <div className="border-b border-sky-100 pb-4 space-y-1">
+                      <span className="text-xs font-black uppercase tracking-wider text-sky-600 font-display">The Golden 50/30/20 Rule</span>
+                      <h3 className="font-black text-slate-900 text-xl font-display">Monthly Budget Allocator ($1,000 Income)</h3>
+                      <p className="text-xs text-slate-500 font-medium">
+                        Divide your monthly income into three key buckets: Needs, Wants, and Savings!
+                      </p>
+                    </div>
+
+                    {/* Allocation Sliders or Preset Buttons */}
+                    <div className="space-y-4">
+                      {/* Needs Bucket */}
+                      <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2">
+                        <div className="flex justify-between items-center text-xs sm:text-sm font-bold">
+                          <span className="text-slate-800 flex items-center gap-1 font-display">🥦 Needs (Fixed Bills & Essentials): {needsPct}%</span>
+                          <span className="text-rose-600 font-black font-display">${needsDollar}/mo</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="30"
+                          max="70"
+                          step="5"
+                          value={needsPct}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            const rem = 100 - val;
+                            setGameState((prev: any) => ({
+                              ...prev,
+                              needsPercent: val,
+                              wantsPercent: Math.round(rem * 0.6),
+                              savingsPercent: Math.round(rem * 0.4)
+                            }));
+                          }}
+                          className="w-full accent-rose-500 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Wants Bucket */}
+                      <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2">
+                        <div className="flex justify-between items-center text-xs sm:text-sm font-bold">
+                          <span className="text-slate-800 flex items-center gap-1 font-display">🎮 Wants (Entertainment & Fun): {wantsPct}%</span>
+                          <span className="text-pink-600 font-black font-display">${wantsDollar}/mo</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="10"
+                          max="50"
+                          step="5"
+                          value={wantsPct}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            const rem = 100 - needsPct - val;
+                            setGameState((prev: any) => ({
+                              ...prev,
+                              wantsPercent: val,
+                              savingsPercent: Math.max(0, rem)
+                            }));
+                          }}
+                          className="w-full accent-pink-500 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Savings Bucket */}
+                      <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2">
+                        <div className="flex justify-between items-center text-xs sm:text-sm font-bold">
+                          <span className="text-slate-800 flex items-center gap-1 font-display">🐷 Savings (Emergency Fund): {savingsPct}%</span>
+                          <span className="text-emerald-600 font-black font-display">${savingsDollar}/mo</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="50"
+                          step="5"
+                          value={savingsPct}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            const rem = 100 - needsPct - val;
+                            setGameState((prev: any) => ({
+                              ...prev,
+                              savingsPercent: val,
+                              wantsPercent: Math.max(0, rem)
+                            }));
+                          }}
+                          className="w-full accent-emerald-500 cursor-pointer"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Presets */}
+                    <div className="space-y-2">
+                      <span className="text-xs font-black text-slate-400 uppercase tracking-wider font-display">Budget Strategy Presets:</span>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button
+                          onClick={() => setGameState((prev: any) => ({ ...prev, needsPercent: 50, wantsPercent: 30, savingsPercent: 20 }))}
+                          className="py-2 px-1 text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200 rounded-xl hover:bg-sky-100 font-display"
+                        >
+                          ⚖️ Balanced 50/30/20
+                        </button>
+                        <button
+                          onClick={() => setGameState((prev: any) => ({ ...prev, needsPercent: 45, wantsPercent: 15, savingsPercent: 40 }))}
+                          className="py-2 px-1 text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl hover:bg-emerald-100 font-display"
+                        >
+                          🚀 Wealth Builder 45/15/40
+                        </button>
+                        <button
+                          onClick={() => setGameState((prev: any) => ({ ...prev, needsPercent: 50, wantsPercent: 45, savingsPercent: 5 }))}
+                          className="py-2 px-1 text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 rounded-xl hover:bg-amber-100 font-display"
+                        >
+                          ⚠️ Risky Fun 50/45/5
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setGameState((prev: any) => ({ ...prev, activeTab: "simulation" }))}
+                      className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-4 rounded-xl shadow-md transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-sky-700 active:translate-y-0.5"
+                    >
+                      Test Budget in 6-Month Real World Simulation 🗓️ ➡️
+                    </button>
+                  </div>
+                );
+              })()}
+
+              {/* TAB 3: 6-MONTH REAL WORLD SIMULATION */}
+              {activeTab === "simulation" && (
+                <div className="space-y-6">
+                  {/* Header Month Tracker */}
+                  <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 shadow-sm space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{currentMonthData.seasonIcon}</span>
+                        <div>
+                          <h3 className="font-black text-slate-900 text-base sm:text-lg font-display">
+                            Month {currentMonthIdx + 1}: {currentMonthData.monthName}
+                          </h3>
+                          <p className="text-xs font-bold text-sky-600 font-display">
+                            {currentMonthData.motto}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Bank Accounts Bar */}
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="bg-sky-50 border border-sky-200 px-3 py-1.5 rounded-xl flex items-center gap-2">
+                          <span className="text-base">💳</span>
+                          <div>
+                            <span className="block text-[10px] font-black uppercase text-sky-600 tracking-wider">Checking</span>
+                            <span className="font-black text-sky-950 text-xs sm:text-sm font-display">+${monthIncomeTotal}</span>
+                          </div>
+                        </div>
+                        <div className="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-2">
+                          <span className="text-base">🐷</span>
+                          <div>
+                            <span className="block text-[10px] font-black uppercase text-emerald-600 tracking-wider">Savings</span>
+                            <span className="font-black text-emerald-950 text-xs sm:text-sm font-display">${gameState.savings || 0}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Month Progress Pills */}
+                    <div className="grid grid-cols-6 gap-1 sm:gap-2 pt-1 border-t border-slate-100">
+                      {SIMULATION_MONTHS.map((m, idx) => (
+                        <div
+                          key={idx}
+                          className={`py-1.5 rounded-xl text-center text-[10px] sm:text-xs font-black font-display transition-all border ${
+                            idx === currentMonthIdx
+                              ? "bg-sky-500 text-white border-sky-600 shadow-sm scale-105"
+                              : idx < currentMonthIdx
+                              ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                              : "bg-slate-100 text-slate-400 border-slate-200 opacity-60"
+                          }`}
+                        >
+                          <span className="hidden sm:inline">{m.monthName}</span>
+                          <span className="sm:hidden">{m.monthName.substring(0, 3)}</span>
+                          {idx < currentMonthIdx && " ✓"}
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Step 2: Side Event or Surprise (If applicable) */}
-                  {currentMonthData.sideEvent && (
-                    <div className="bg-amber-50/80 rounded-2xl border-2 border-amber-300 p-5 shadow-sm space-y-3">
-                      <div className="flex items-center gap-2 border-b border-amber-200 pb-2">
-                        <span className="w-7 h-7 rounded-lg bg-amber-500 text-white font-black text-xs flex items-center justify-center font-display">⚡</span>
-                        <h4 className="font-black text-amber-950 text-sm sm:text-base font-display">{currentMonthData.sideEvent.title}</h4>
-                      </div>
-                      <p className="text-xs sm:text-sm text-amber-900 font-medium">
-                        {currentMonthData.sideEvent.description}
-                      </p>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                        {currentMonthData.sideEvent.options.map((opt, idx) => {
-                          const isSelected = gameState.selectedSide === idx;
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() => handleSelectSimulationOption("side", idx)}
-                              className={`p-3.5 rounded-xl border-2 text-left transition-all space-y-1 ${
-                                isSelected
-                                  ? "bg-amber-500 text-white border-amber-600 shadow-sm scale-[1.01]"
-                                  : "bg-white hover:bg-amber-100/50 border-amber-200 text-slate-800"
-                              }`}
-                            >
-                              <div className="flex justify-between items-start gap-2">
-                                <span className={`font-bold text-xs sm:text-sm ${isSelected ? "text-white" : "text-slate-900"}`}>
-                                  {opt.label}
-                                </span>
-                                <span className={`font-black text-xs px-2 py-0.5 rounded-full font-display shrink-0 ${
-                                  opt.amount > 0
-                                    ? isSelected ? "bg-emerald-300 text-emerald-950" : "bg-emerald-100 text-emerald-800"
-                                    : opt.amount < 0
-                                    ? isSelected ? "bg-rose-300 text-rose-950" : "bg-rose-100 text-rose-800"
-                                    : isSelected ? "bg-amber-400 text-amber-950" : "bg-slate-100 text-slate-600"
-                                }`}>
-                                  {opt.amount > 0 ? `+$${opt.amount}` : opt.amount < 0 ? `-$${Math.abs(opt.amount)}` : "$0"}
-                                </span>
-                              </div>
-                              {isSelected && (
-                                <p className="text-xs text-amber-100 font-medium pt-1 border-t border-amber-400/50">
-                                  {opt.feedback}
-                                </p>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Step 3: Variable Need Choice */}
-                  <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
-                    <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                      <span className="w-7 h-7 rounded-lg bg-sky-500 text-white font-black text-xs flex items-center justify-center font-display">2</span>
-                      <div>
-                        <h4 className="font-black text-slate-900 text-sm sm:text-base font-display">
-                          {currentMonthData.variableNeedOptions.title} (Essential Need)
-                        </h4>
-                        <p className="text-xs text-slate-500 font-medium">
-                          {currentMonthData.variableNeedOptions.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                      {currentMonthData.variableNeedOptions.options.map((opt, idx) => {
-                        const isSelected = gameState.selectedNeed === idx;
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => handleSelectSimulationOption("need", idx)}
-                            className={`p-3.5 rounded-xl border-2 text-left transition-all space-y-1 ${
-                              isSelected
-                                ? "bg-sky-500 text-white border-sky-600 shadow-sm scale-[1.01]"
-                                : "bg-slate-50 hover:bg-sky-50 border-slate-200 text-slate-800"
-                            }`}
-                          >
-                            <div className="flex justify-between items-start gap-2">
-                              <span className={`font-bold text-xs sm:text-sm ${isSelected ? "text-white" : "text-slate-900"}`}>
-                                {opt.label}
-                              </span>
-                              <span className={`font-black text-xs px-2.5 py-0.5 rounded-full font-display shrink-0 ${
-                                isSelected ? "bg-sky-200 text-sky-950" : "bg-rose-100 text-rose-800"
-                              }`}>
-                                -${opt.cost}
-                              </span>
-                            </div>
-                            {isSelected && (
-                              <p className="text-xs text-sky-100 font-medium pt-1 border-t border-sky-400/50">
-                                {opt.feedback}
-                              </p>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Step 4: Want Choice */}
-                  <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
-                    <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                      <span className="w-7 h-7 rounded-lg bg-pink-500 text-white font-black text-xs flex items-center justify-center font-display">3</span>
-                      <div>
-                        <h4 className="font-black text-slate-900 text-sm sm:text-base font-display">
-                          {currentMonthData.wantOptions.title} (Non-Essential Want)
-                        </h4>
-                        <p className="text-xs text-slate-500 font-medium">
-                          {currentMonthData.wantOptions.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                      {currentMonthData.wantOptions.options.map((opt, idx) => {
-                        const isSelected = gameState.selectedWant === idx;
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => handleSelectSimulationOption("want", idx)}
-                            className={`p-3.5 rounded-xl border-2 text-left transition-all space-y-1 ${
-                              isSelected
-                                ? "bg-pink-500 text-white border-pink-600 shadow-sm scale-[1.01]"
-                                : "bg-slate-50 hover:bg-pink-50 border-slate-200 text-slate-800"
-                            }`}
-                          >
-                            <div className="flex justify-between items-start gap-2">
-                              <span className={`font-bold text-xs sm:text-sm ${isSelected ? "text-white" : "text-slate-900"}`}>
-                                {opt.label}
-                              </span>
-                              <span className={`font-black text-xs px-2.5 py-0.5 rounded-full font-display shrink-0 ${
-                                isSelected ? "bg-pink-200 text-pink-950" : "bg-pink-100 text-pink-800"
-                              }`}>
-                                -${opt.cost}
-                              </span>
-                            </div>
-                            {isSelected && (
-                              <p className="text-xs text-pink-100 font-medium pt-1 border-t border-pink-400/50">
-                                {opt.feedback}
-                              </p>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Monthly Net Cash Flow Box */}
-                  <div className="bg-slate-900 text-white rounded-2xl p-5 shadow-md space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-                      <span className="text-xs font-black uppercase tracking-wider text-slate-400 font-display">
-                        Month End Budget Calculator ({currentMonthData.monthName})
-                      </span>
-                      <span className="text-xs font-bold text-emerald-400 bg-emerald-950 border border-emerald-800 px-3 py-1 rounded-full">
-                        Income: +${monthIncomeTotal}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                      <div className="bg-slate-800 p-3 rounded-xl space-y-0.5">
-                        <span className="text-slate-400 font-semibold block text-[10px]">Income Earned</span>
-                        <span className="font-black text-emerald-400 text-sm font-display">+${monthIncomeTotal}</span>
-                      </div>
-                      <div className="bg-slate-800 p-3 rounded-xl space-y-0.5">
-                        <span className="text-slate-400 font-semibold block text-[10px]">Needs (Bills/Groceries)</span>
-                        <span className="font-black text-rose-400 text-sm font-display">-${totalMonthNeeds}</span>
-                      </div>
-                      <div className="bg-slate-800 p-3 rounded-xl space-y-0.5">
-                        <span className="text-slate-400 font-semibold block text-[10px]">Wants (Fun/Outings)</span>
-                        <span className="font-black text-pink-400 text-sm font-display">-${wantCost}</span>
-                      </div>
-                      <div className="bg-slate-800 p-3 rounded-xl space-y-0.5 border border-emerald-500/40">
-                        <span className="text-slate-300 font-bold block text-[10px]">Leftover Surplus</span>
-                        <span className="font-black text-emerald-300 text-sm font-display">+${monthNetCash}</span>
-                      </div>
-                    </div>
-
-                    <button
-                      disabled={!isMonthComplete}
-                      onClick={handleCompleteSimulationMonth}
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-700 disabled:text-slate-500 text-white font-black py-4 rounded-xl shadow-lg transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-emerald-700 active:translate-y-0.5"
-                    >
-                      {isMonthComplete ? (
-                        <>Complete {currentMonthData.monthName} & Transfer +${monthNetCash} to Savings 🐷 ➡️</>
-                      ) : (
-                        <>Make your selections above to finish {currentMonthData.monthName}!</>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Month Summary Stage */}
-              {gameState.stage === "month_summary" && (
-                <div className="space-y-6">
-                  <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-md max-w-lg mx-auto space-y-5 text-left">
-                    <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                      <div>
-                        <h3 className="font-black text-slate-900 text-lg font-display flex items-center gap-2">
-                          <span>{currentMonthData.seasonIcon}</span> {currentMonthData.monthName} Budget Completed!
-                        </h3>
-                        <p className="text-xs text-slate-500 font-medium">Surplus cash successfully swept to savings!</p>
-                      </div>
-                      <span className="text-3xl">🧾</span>
-                    </div>
-
-                    <div className="space-y-2.5 text-xs sm:text-sm">
-                      <div className="flex justify-between font-semibold text-slate-600">
-                        <span>Monthly Income Received</span>
-                        <span className="font-bold text-slate-900">${currentMonthData.income}</span>
-                      </div>
-                      {gameState.selectedSide !== null && currentMonthData.sideEvent && (
-                        <div className={`flex justify-between font-bold px-2.5 py-1 rounded-lg ${
-                          currentMonthData.sideEvent.options[gameState.selectedSide].amount >= 0 ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
-                        }`}>
-                          <span>{currentMonthData.sideEvent.options[gameState.selectedSide].label}</span>
-                          <span>
-                            {currentMonthData.sideEvent.options[gameState.selectedSide].amount >= 0
-                              ? `+$${currentMonthData.sideEvent.options[gameState.selectedSide].amount}`
-                              : `-$${Math.abs(currentMonthData.sideEvent.options[gameState.selectedSide].amount)}`
-                            }
+                  {gameState.stage === "monthly_play" && (
+                    <div className="space-y-6">
+                      {/* Step 1: Fixed Bills & Needs */}
+                      <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 font-black text-xs flex items-center justify-center font-display">1</span>
+                            <h4 className="font-black text-slate-900 text-sm sm:text-base font-display">Fixed Bills & Needs (Due First)</h4>
+                          </div>
+                          <span className="text-xs font-black bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200 font-display">
+                            Total Fixed: -${fixedNeedsSum}
                           </span>
                         </div>
-                      )}
-                      <div className="flex justify-between font-semibold text-slate-600">
-                        <span>Total Needs Paid (Fixed Bills & Groceries)</span>
-                        <span className="font-bold text-rose-600">
-                          -${currentMonthData.fixedNeeds.reduce((a, b) => a + b.amount, 0) + (gameState.selectedNeed !== null ? currentMonthData.variableNeedOptions.options[gameState.selectedNeed].cost : 0)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between font-semibold text-slate-600">
-                        <span>Total Wants Paid (Entertainment / Outings)</span>
-                        <span className="font-bold text-pink-600">
-                          -${gameState.selectedWant !== null ? currentMonthData.wantOptions.options[gameState.selectedWant].cost : 0}
-                        </span>
-                      </div>
-                      <div className="h-[1px] bg-slate-200" />
-                      <div className="flex justify-between font-black text-slate-900 text-sm">
-                        <span>Month Cash Surplus Swept to Savings</span>
-                        <span className="text-emerald-600">+${gameState.lastMonthNet}</span>
-                      </div>
-                      {gameState.lastInterestEarned > 0 && (
-                        <div className="flex justify-between font-bold text-sky-700 bg-sky-50 px-3 py-1.5 rounded-lg">
-                          <span>🐷 Bank Interest Earned on Savings (0.5%)</span>
-                          <span>+${gameState.lastInterestEarned}</span>
-                        </div>
-                      )}
-                      <div className="h-[2px] bg-slate-200" />
-                      <div className="flex justify-between font-black text-base sm:text-lg text-emerald-800 bg-emerald-100/80 border border-emerald-300 px-3 py-2 rounded-xl">
-                        <span>Total Savings Account Balance</span>
-                        <span>${gameState.savings}</span>
-                      </div>
-                    </div>
 
-                    <button
-                      onClick={handleNextSimulationMonth}
-                      className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-4 rounded-xl shadow-md transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-sky-700 active:translate-y-0.5"
-                    >
-                      {gameState.monthIndex < SIMULATION_MONTHS.length - 1 ? (
-                        <>Proceed to {SIMULATION_MONTHS[gameState.monthIndex + 1].monthName} ➡️</>
-                      ) : (
-                        <>View 6-Month Financial Report Card 📜 ➡️</>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Final 6-Month Summary Report Card */}
-              {gameState.stage === "final_summary" && (() => {
-                const badge = gameState.savings >= 1800
-                  ? { title: "Master Wealth Builder 🏆", bg: "bg-amber-100 text-amber-900 border-amber-300", desc: "Outstanding financial discipline! You prioritized savings, optimized needs, and built a massive emergency shield!" }
-                  : gameState.savings >= 1200
-                  ? { title: "Balanced Budgeter ⚖️", bg: "bg-emerald-100 text-emerald-900 border-emerald-300", desc: "Great job! You achieved a healthy balance between enjoying wants and growing your savings." }
-                  : { title: "Smart Learner 🎓", bg: "bg-sky-100 text-sky-900 border-sky-300", desc: "Good effort completing all 6 months! Try running the simulation again to see if you can cut unnecessary wants and grow your savings even higher." };
-
-                return (
-                  <div className="space-y-6">
-                    <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-md max-w-xl mx-auto space-y-6 text-left">
-                      <div className="text-center border-b border-slate-100 pb-4 space-y-1">
-                        <span className="text-4xl">📜</span>
-                        <h3 className="font-black text-slate-900 text-xl font-display">6-MONTH FINANCIAL REPORT CARD</h3>
-                        <p className="text-xs text-slate-500 font-semibold font-display">January through June Simulation Complete</p>
-                      </div>
-
-                      {/* Badge Card */}
-                      <div className={`p-4 rounded-2xl border-2 text-center space-y-1.5 ${badge.bg}`}>
-                        <span className="text-[10px] font-black uppercase tracking-wider font-display">Financial Persona Awarded</span>
-                        <h4 className="font-black text-lg font-display">{badge.title}</h4>
-                        <p className="text-xs font-medium leading-relaxed">{badge.desc}</p>
-                      </div>
-
-                      {/* Financial Metrics Grid */}
-                      <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm font-semibold">
-                        <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                          <span className="text-slate-500 text-[10px] font-bold block uppercase font-display">Total 6-Month Income</span>
-                          <span className="text-emerald-600 font-black text-lg font-display">${gameState.totalIncome}</span>
-                        </div>
-                        <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                          <span className="text-slate-500 text-[10px] font-bold block uppercase font-display">Total Spent on Needs</span>
-                          <span className="text-rose-600 font-black text-lg font-display">${gameState.totalNeeds}</span>
-                        </div>
-                        <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                          <span className="text-slate-500 text-[10px] font-bold block uppercase font-display">Total Spent on Wants</span>
-                          <span className="text-pink-600 font-black text-lg font-display">${gameState.totalWants}</span>
-                        </div>
-                        <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-300">
-                          <span className="text-emerald-800 text-[10px] font-black block uppercase font-display">Total Emergency Savings</span>
-                          <span className="text-emerald-700 font-black text-xl font-display">${gameState.savings}</span>
-                        </div>
-                      </div>
-
-                      {/* Monthly Timeline Log */}
-                      <div className="space-y-2 pt-2 border-t border-slate-100">
-                        <h4 className="text-xs font-black text-slate-400 font-display uppercase tracking-wider">6-Month Savings Progress Log</h4>
-                        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center text-xs">
-                          {gameState.monthHistory?.map((h: any, idx: number) => (
-                            <div key={idx} className="bg-slate-50 border border-slate-200 p-2 rounded-xl">
-                              <span className="block text-[10px] font-bold text-slate-400 font-display">{h.monthName}</span>
-                              <span className="font-black text-emerald-600 text-xs font-display">+${h.netSurplus}</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                          {currentMonthData.fixedNeeds.map((item, idx) => (
+                            <div key={idx} className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex justify-between items-center font-semibold text-slate-700">
+                              <span>{item.name}</span>
+                              <span className="font-bold text-rose-600">-${item.amount}</span>
                             </div>
                           ))}
                         </div>
                       </div>
 
-                      <button
-                        id="m3-complete"
-                        onClick={completeSimulation}
-                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 font-display uppercase tracking-wider text-xs sm:text-sm border-b-4 border-emerald-700 active:translate-y-0.5"
-                      >
-                        Complete Lesson & Claim Rewards <Check className="w-5 h-5" />
-                      </button>
+                      {/* Step 2: Side Event or Surprise */}
+                      {currentMonthData.sideEvent && (
+                        <div className="bg-amber-50/80 rounded-2xl border-2 border-amber-300 p-5 shadow-sm space-y-3">
+                          <div className="flex items-center gap-2 border-b border-amber-200 pb-2">
+                            <span className="w-7 h-7 rounded-lg bg-amber-500 text-white font-black text-xs flex items-center justify-center font-display">⚡</span>
+                            <h4 className="font-black text-amber-950 text-sm sm:text-base font-display">{currentMonthData.sideEvent.title}</h4>
+                          </div>
+                          <p className="text-xs sm:text-sm text-amber-900 font-medium">
+                            {currentMonthData.sideEvent.description}
+                          </p>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            {currentMonthData.sideEvent.options.map((opt, idx) => {
+                              const isSelected = gameState.selectedSide === idx;
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleSelectSimulationOption("side", idx)}
+                                  className={`p-3.5 rounded-xl border-2 text-left transition-all space-y-1 ${
+                                    isSelected
+                                      ? "bg-amber-500 text-white border-amber-600 shadow-sm scale-[1.01]"
+                                      : "bg-white hover:bg-amber-100/50 border-amber-200 text-slate-800"
+                                  }`}
+                                >
+                                  <div className="flex justify-between items-start gap-2">
+                                    <span className={`font-bold text-xs sm:text-sm ${isSelected ? "text-white" : "text-slate-900"}`}>
+                                      {opt.label}
+                                    </span>
+                                    <span className={`font-black text-xs px-2 py-0.5 rounded-full font-display shrink-0 ${
+                                      opt.amount > 0
+                                        ? isSelected ? "bg-emerald-300 text-emerald-950" : "bg-emerald-100 text-emerald-800"
+                                        : opt.amount < 0
+                                        ? isSelected ? "bg-rose-300 text-rose-950" : "bg-rose-100 text-rose-800"
+                                        : isSelected ? "bg-amber-400 text-amber-950" : "bg-slate-100 text-slate-600"
+                                    }`}>
+                                      {opt.amount > 0 ? `+$${opt.amount}` : opt.amount < 0 ? `-$${Math.abs(opt.amount)}` : "$0"}
+                                    </span>
+                                  </div>
+                                  {isSelected && (
+                                    <p className="text-xs text-amber-100 font-medium pt-1 border-t border-amber-400/50">
+                                      {opt.feedback}
+                                    </p>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Step 3: Variable Need Choice */}
+                      <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
+                        <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+                          <span className="w-7 h-7 rounded-lg bg-sky-500 text-white font-black text-xs flex items-center justify-center font-display">2</span>
+                          <div>
+                            <h4 className="font-black text-slate-900 text-sm sm:text-base font-display">
+                              {currentMonthData.variableNeedOptions.title} (Essential Need)
+                            </h4>
+                            <p className="text-xs text-slate-500 font-medium">
+                              {currentMonthData.variableNeedOptions.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                          {currentMonthData.variableNeedOptions.options.map((opt, idx) => {
+                            const isSelected = gameState.selectedNeed === idx;
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => handleSelectSimulationOption("need", idx)}
+                                className={`p-3.5 rounded-xl border-2 text-left transition-all space-y-1 ${
+                                  isSelected
+                                    ? "bg-sky-500 text-white border-sky-600 shadow-sm scale-[1.01]"
+                                    : "bg-slate-50 hover:bg-sky-50 border-slate-200 text-slate-800"
+                                }`}
+                              >
+                                <div className="flex justify-between items-start gap-2">
+                                  <span className={`font-bold text-xs sm:text-sm ${isSelected ? "text-white" : "text-slate-900"}`}>
+                                    {opt.label}
+                                  </span>
+                                  <span className={`font-black text-xs px-2.5 py-0.5 rounded-full font-display shrink-0 ${
+                                    isSelected ? "bg-sky-200 text-sky-950" : "bg-rose-100 text-rose-800"
+                                  }`}>
+                                    -${opt.cost}
+                                  </span>
+                                </div>
+                                {isSelected && (
+                                  <p className="text-xs text-sky-100 font-medium pt-1 border-t border-sky-400/50">
+                                    {opt.feedback}
+                                  </p>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Step 4: Want Choice */}
+                      <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
+                        <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+                          <span className="w-7 h-7 rounded-lg bg-pink-500 text-white font-black text-xs flex items-center justify-center font-display">3</span>
+                          <div>
+                            <h4 className="font-black text-slate-900 text-sm sm:text-base font-display">
+                              {currentMonthData.wantOptions.title} (Non-Essential Want)
+                            </h4>
+                            <p className="text-xs text-slate-500 font-medium">
+                              {currentMonthData.wantOptions.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                          {currentMonthData.wantOptions.options.map((opt, idx) => {
+                            const isSelected = gameState.selectedWant === idx;
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => handleSelectSimulationOption("want", idx)}
+                                className={`p-3.5 rounded-xl border-2 text-left transition-all space-y-1 ${
+                                  isSelected
+                                    ? "bg-pink-500 text-white border-pink-600 shadow-sm scale-[1.01]"
+                                    : "bg-slate-50 hover:bg-pink-50 border-slate-200 text-slate-800"
+                                }`}
+                              >
+                                <div className="flex justify-between items-start gap-2">
+                                  <span className={`font-bold text-xs sm:text-sm ${isSelected ? "text-white" : "text-slate-900"}`}>
+                                    {opt.label}
+                                  </span>
+                                  <span className={`font-black text-xs px-2.5 py-0.5 rounded-full font-display shrink-0 ${
+                                    isSelected ? "bg-pink-200 text-pink-950" : "bg-pink-100 text-pink-800"
+                                  }`}>
+                                    -${opt.cost}
+                                  </span>
+                                </div>
+                                {isSelected && (
+                                  <p className="text-xs text-pink-100 font-medium pt-1 border-t border-pink-400/50">
+                                    {opt.feedback}
+                                  </p>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Monthly Net Cash Flow Box */}
+                      <div className="bg-slate-900 text-white rounded-2xl p-5 shadow-md space-y-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                          <span className="text-xs font-black uppercase tracking-wider text-slate-400 font-display">
+                            Month End Budget Calculator ({currentMonthData.monthName})
+                          </span>
+                          <span className="text-xs font-bold text-emerald-400 bg-emerald-950 border border-emerald-800 px-3 py-1 rounded-full">
+                            Income: +${monthIncomeTotal}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                          <div className="bg-slate-800 p-3 rounded-xl space-y-0.5">
+                            <span className="text-slate-400 font-semibold block text-[10px]">Income Earned</span>
+                            <span className="font-black text-emerald-400 text-sm font-display">+${monthIncomeTotal}</span>
+                          </div>
+                          <div className="bg-slate-800 p-3 rounded-xl space-y-0.5">
+                            <span className="text-slate-400 font-semibold block text-[10px]">Needs (Bills/Groceries)</span>
+                            <span className="font-black text-rose-400 text-sm font-display">-${totalMonthNeeds}</span>
+                          </div>
+                          <div className="bg-slate-800 p-3 rounded-xl space-y-0.5">
+                            <span className="text-slate-400 font-semibold block text-[10px]">Wants (Fun/Outings)</span>
+                            <span className="font-black text-pink-400 text-sm font-display">-${wantCost}</span>
+                          </div>
+                          <div className="bg-slate-800 p-3 rounded-xl space-y-0.5 border border-emerald-500/40">
+                            <span className="text-slate-300 font-bold block text-[10px]">Leftover Surplus</span>
+                            <span className="font-black text-emerald-300 text-sm font-display">+${monthNetCash}</span>
+                          </div>
+                        </div>
+
+                        <button
+                          disabled={!isMonthComplete}
+                          onClick={handleCompleteSimulationMonth}
+                          className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-700 disabled:text-slate-500 text-white font-black py-4 rounded-xl shadow-lg transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-emerald-700 active:translate-y-0.5"
+                        >
+                          {isMonthComplete ? (
+                            <>Complete {currentMonthData.monthName} & Transfer +${monthNetCash} to Savings 🐷 ➡️</>
+                          ) : (
+                            <>Make your selections above to finish {currentMonthData.monthName}!</>
+                          )}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })()}
+                  )}
+
+                  {/* Month Summary Stage */}
+                  {gameState.stage === "month_summary" && (
+                    <div className="space-y-6">
+                      <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-md max-w-lg mx-auto space-y-5 text-left">
+                        <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                          <div>
+                            <h3 className="font-black text-slate-900 text-lg font-display flex items-center gap-2">
+                              <span>{currentMonthData.seasonIcon}</span> {currentMonthData.monthName} Budget Completed!
+                            </h3>
+                            <p className="text-xs text-slate-500 font-medium">Surplus cash successfully swept to savings!</p>
+                          </div>
+                          <span className="text-3xl">🧾</span>
+                        </div>
+
+                        <div className="space-y-2.5 text-xs sm:text-sm">
+                          <div className="flex justify-between font-semibold text-slate-600">
+                            <span>Monthly Income Received</span>
+                            <span className="font-bold text-slate-900">${currentMonthData.income}</span>
+                          </div>
+                          {typeof gameState.selectedSide === "number" && currentMonthData.sideEvent && currentMonthData.sideEvent.options[gameState.selectedSide] && (
+                            <div className={`flex justify-between font-bold px-2.5 py-1 rounded-lg ${
+                              currentMonthData.sideEvent.options[gameState.selectedSide].amount >= 0 ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
+                            }`}>
+                              <span>{currentMonthData.sideEvent.options[gameState.selectedSide].label}</span>
+                              <span>
+                                {currentMonthData.sideEvent.options[gameState.selectedSide].amount >= 0
+                                  ? `+$${currentMonthData.sideEvent.options[gameState.selectedSide].amount}`
+                                  : `-$${Math.abs(currentMonthData.sideEvent.options[gameState.selectedSide].amount)}`
+                                }
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex justify-between font-semibold text-slate-600">
+                            <span>Total Needs Paid (Fixed Bills & Groceries)</span>
+                            <span className="font-bold text-rose-600">
+                              -${currentMonthData.fixedNeeds.reduce((a, b) => a + b.amount, 0) + (typeof gameState.selectedNeed === "number" && currentMonthData.variableNeedOptions.options[gameState.selectedNeed] ? currentMonthData.variableNeedOptions.options[gameState.selectedNeed].cost : 0)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between font-semibold text-slate-600">
+                            <span>Total Wants Paid (Entertainment / Outings)</span>
+                            <span className="font-bold text-pink-600">
+                              -${typeof gameState.selectedWant === "number" && currentMonthData.wantOptions.options[gameState.selectedWant] ? currentMonthData.wantOptions.options[gameState.selectedWant].cost : 0}
+                            </span>
+                          </div>
+                          <div className="h-[1px] bg-slate-200" />
+                          <div className="flex justify-between font-black text-slate-900 text-sm">
+                            <span>Month Cash Surplus Swept to Savings</span>
+                            <span className="text-emerald-600">+${gameState.lastMonthNet || 0}</span>
+                          </div>
+                          {(gameState.lastInterestEarned || 0) > 0 && (
+                            <div className="flex justify-between font-bold text-sky-700 bg-sky-50 px-3 py-1.5 rounded-lg">
+                              <span>🐷 Bank Interest Earned on Savings (0.5%)</span>
+                              <span>+${gameState.lastInterestEarned}</span>
+                            </div>
+                          )}
+                          <div className="h-[2px] bg-slate-200" />
+                          <div className="flex justify-between font-black text-base sm:text-lg text-emerald-800 bg-emerald-100/80 border border-emerald-300 px-3 py-2 rounded-xl">
+                            <span>Total Savings Account Balance</span>
+                            <span>${gameState.savings || 0}</span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={handleNextSimulationMonth}
+                          className="w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-4 rounded-xl shadow-md transition-all font-display uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-b-4 border-sky-700 active:translate-y-0.5"
+                        >
+                          {currentMonthIdx < SIMULATION_MONTHS.length - 1 ? (
+                            <>Proceed to {SIMULATION_MONTHS[currentMonthIdx + 1].monthName} ➡️</>
+                          ) : (
+                            <>View 6-Month Financial Report Card 📜 ➡️</>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Final 6-Month Summary Report Card */}
+                  {gameState.stage === "final_summary" && (() => {
+                    const badge = (gameState.savings || 0) >= 1800
+                      ? { title: "Master Wealth Builder 🏆", bg: "bg-amber-100 text-amber-900 border-amber-300", desc: "Outstanding financial discipline! You prioritized savings, optimized needs, and built a massive emergency shield!" }
+                      : (gameState.savings || 0) >= 1200
+                      ? { title: "Balanced Budgeter ⚖️", bg: "bg-emerald-100 text-emerald-900 border-emerald-300", desc: "Great job! You achieved a healthy balance between enjoying wants and growing your savings." }
+                      : { title: "Smart Learner 🎓", bg: "bg-sky-100 text-sky-900 border-sky-300", desc: "Good effort completing all 6 months! Try running the simulation again to see if you can cut unnecessary wants and grow your savings even higher." };
+
+                    return (
+                      <div className="space-y-6">
+                        <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-md max-w-xl mx-auto space-y-6 text-left">
+                          <div className="text-center border-b border-slate-100 pb-4 space-y-1">
+                            <span className="text-4xl">📜</span>
+                            <h3 className="font-black text-slate-900 text-xl font-display">6-MONTH FINANCIAL REPORT CARD</h3>
+                            <p className="text-xs text-slate-500 font-semibold font-display">January through June Simulation Complete</p>
+                          </div>
+
+                          {/* Badge Card */}
+                          <div className={`p-4 rounded-2xl border-2 text-center space-y-1.5 ${badge.bg}`}>
+                            <span className="text-[10px] font-black uppercase tracking-wider font-display">Financial Persona Awarded</span>
+                            <h4 className="font-black text-lg font-display">{badge.title}</h4>
+                            <p className="text-xs font-medium leading-relaxed">{badge.desc}</p>
+                          </div>
+
+                          {/* Financial Metrics Grid */}
+                          <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm font-semibold">
+                            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                              <span className="text-slate-500 text-[10px] font-bold block uppercase font-display">Total 6-Month Income</span>
+                              <span className="text-emerald-600 font-black text-lg font-display">${gameState.totalIncome || 0}</span>
+                            </div>
+                            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                              <span className="text-slate-500 text-[10px] font-bold block uppercase font-display">Total Spent on Needs</span>
+                              <span className="text-rose-600 font-black text-lg font-display">${gameState.totalNeeds || 0}</span>
+                            </div>
+                            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                              <span className="text-slate-500 text-[10px] font-bold block uppercase font-display">Total Spent on Wants</span>
+                              <span className="text-pink-600 font-black text-lg font-display">${gameState.totalWants || 0}</span>
+                            </div>
+                            <div className="bg-emerald-50 p-3.5 rounded-xl border border-emerald-300">
+                              <span className="text-emerald-800 text-[10px] font-black block uppercase font-display">Total Emergency Savings</span>
+                              <span className="text-emerald-700 font-black text-xl font-display">${gameState.savings || 0}</span>
+                            </div>
+                          </div>
+
+                          {/* Monthly Timeline Log */}
+                          <div className="space-y-2 pt-2 border-t border-slate-100">
+                            <h4 className="text-xs font-black text-slate-400 font-display uppercase tracking-wider">6-Month Savings Progress Log</h4>
+                            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center text-xs">
+                              {gameState.monthHistory?.map((h: any, idx: number) => (
+                                <div key={idx} className="bg-slate-50 border border-slate-200 p-2 rounded-xl">
+                                  <span className="block text-[10px] font-bold text-slate-400 font-display">{h.monthName}</span>
+                                  <span className="font-black text-emerald-600 text-xs font-display">+${h.netSurplus}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <button
+                            id="m3-complete"
+                            onClick={completeSimulation}
+                            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 font-display uppercase tracking-wider text-xs sm:text-sm border-b-4 border-emerald-700 active:translate-y-0.5"
+                          >
+                            Complete Lesson & Claim Rewards <Check className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
           );
         })()}
