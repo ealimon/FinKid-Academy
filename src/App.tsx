@@ -542,11 +542,30 @@ export default function App() {
                                 +{activeModule.coinReward} Coins • +{activeModule.xpReward} XP Awarded!
                               </div>
 
-                              <div className="flex gap-3">
+                              <div className="flex flex-col sm:flex-row gap-2.5">
+                                {(() => {
+                                  const currentIndex = MODULES.findIndex(m => m.id === activeModule.id);
+                                  const nextMod = MODULES[currentIndex + 1];
+                                  if (nextMod) {
+                                    return (
+                                      <button
+                                        id="next-module-btn"
+                                        onClick={() => {
+                                          setSelectedModuleId(nextMod.id);
+                                          setModuleStage("intro");
+                                        }}
+                                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3.5 px-3 rounded-2xl shadow-md border-b-4 border-emerald-700 active:translate-y-0.5 transition-all text-xs font-display flex items-center justify-center gap-1.5"
+                                      >
+                                        Next Module ➡️
+                                      </button>
+                                    );
+                                  }
+                                  return null;
+                                })()}
                                 <button
                                   id="dress-up-shop-btn"
                                   onClick={() => { setActiveTab("avatar"); }}
-                                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-3.5 rounded-2xl shadow-md border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-xs font-display"
+                                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-yellow-950 font-black py-3.5 px-3 rounded-2xl shadow-md border-b-4 border-yellow-600 active:translate-y-0.5 transition-all text-xs font-display flex items-center justify-center gap-1.5"
                                 >
                                   Shop Mascot Closet 👕
                                 </button>
