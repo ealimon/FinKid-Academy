@@ -156,7 +156,7 @@ export default function App() {
     <div className="min-h-screen bg-sky-50 text-slate-800 flex flex-col justify-between font-sans selection:bg-yellow-200">
       
       {/* HEADER SECTION */}
-      <header className="bg-white rounded-3xl p-4 shadow-[0_8px_0_0_#e0f2fe] border-2 border-sky-100 mb-8 sticky top-0 z-40 max-w-7xl mx-auto w-full mt-4">
+      <header className="bg-white rounded-3xl p-4 shadow-[0_8px_0_0_#e0f2fe] border-2 border-sky-100 mb-8 sticky top-0 z-40 max-w-7xl mx-auto w-full mt-4 print:hidden">
         <div className="px-4 py-1 flex flex-col lg:flex-row justify-between items-center gap-4">
           
           {/* Logo Brand */}
@@ -230,7 +230,7 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-8">
         
         {/* APP TABS BAR */}
-        <div className="flex bg-sky-100/80 p-1.5 rounded-2xl border-2 border-sky-200/50 max-w-md mx-auto shadow-sm">
+        <div className="flex bg-sky-100/80 p-1.5 rounded-2xl border-2 border-sky-200/50 max-w-md mx-auto shadow-sm print:hidden">
           <button
             id="tab-modules"
             onClick={() => { setSelectedModuleId("m1"); setWorkspaceTab("game"); setActiveTab("modules"); }}
@@ -258,7 +258,7 @@ export default function App() {
         {activeTab === "modules" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* LEFT COLUMN: Sidebar list of 10 modules */}
-            <div className="lg:col-span-4 bg-white rounded-[2rem] p-5 border-2 border-sky-100 shadow-[0_8px_0_0_#e0f2fe] space-y-4">
+            <div className="lg:col-span-4 bg-white rounded-[2rem] p-5 border-2 border-sky-100 shadow-[0_8px_0_0_#e0f2fe] space-y-4 print:hidden">
               <div className="border-b-2 border-dashed border-sky-100 pb-3">
                 <h3 className="font-black text-sky-900 text-lg font-display flex items-center justify-between">
                   <span>Interactive Learning</span>
@@ -376,12 +376,12 @@ export default function App() {
             </div>
 
             {/* RIGHT COLUMN: Active workspace area */}
-            <div className="lg:col-span-8 space-y-6">
+            <div className="lg:col-span-8 space-y-6 print:lg:col-span-12 print:w-full print:m-0 print:p-0">
               {activeModule ? (
                 <div className="space-y-6">
                   
                   {/* WORKSPACE HEADER CARD */}
-                  <div className="bg-white border-2 border-sky-100 rounded-[2rem] p-5 shadow-[0_8px_0_0_#e0f2fe] flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="bg-white border-2 border-sky-100 rounded-[2rem] p-5 shadow-[0_8px_0_0_#e0f2fe] flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
                     <div className="flex items-start gap-3.5 text-left">
                       <div className="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-inner border border-sky-50">
                         <span>
@@ -656,18 +656,22 @@ export default function App() {
       </main>
 
       {/* STREAK CALENDAR MODAL */}
-      <StreakModal 
-        isOpen={isStreakModalOpen}
-        onClose={() => setIsStreakModalOpen(false)}
-        progress={progress}
-        onUpdateProgress={handleUpdateProgress}
-      />
+      <div className="print:hidden">
+        <StreakModal 
+          isOpen={isStreakModalOpen}
+          onClose={() => setIsStreakModalOpen(false)}
+          progress={progress}
+          onUpdateProgress={handleUpdateProgress}
+        />
+      </div>
 
       {/* FLOATING CHAT COMPONENT */}
-      <FinnyChat />
+      <div className="print:hidden">
+        <FinnyChat />
+      </div>
 
       {/* FOOTER */}
-      <footer className="bg-white border-t-2 border-sky-100 py-6 mt-12 rounded-t-[2.5rem] shadow-inner">
+      <footer className="bg-white border-t-2 border-sky-100 py-6 mt-12 rounded-t-[2.5rem] shadow-inner print:hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-xs text-sky-500 font-bold font-display gap-3">
           <p>© 2026 FINKID ACADEMY. Designed for future financial champions.</p>
           <div className="flex gap-4">

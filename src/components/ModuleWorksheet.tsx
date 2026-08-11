@@ -426,16 +426,23 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
   };
 
   return (
-    <div className="bg-white border-2 border-sky-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_0_0_#e0f2fe] space-y-6 text-left max-w-2xl mx-auto print:border-0 print:shadow-none print:p-0">
+    <div className="bg-white border-2 border-sky-100 rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_0_0_#e0f2fe] space-y-6 text-left max-w-2xl mx-auto print:border-0 print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
       
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-dashed border-sky-100 pb-5 gap-4 print:pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-dashed border-sky-100 pb-5 gap-4 print:border-b-2 print:border-slate-900 print:pb-3 print:mb-3">
         <div>
-          <span className="text-xs font-black uppercase tracking-widest bg-sky-100 text-sky-700 px-3 py-1 rounded-full print:bg-transparent print:p-0">
-            {moduleCategory} Worksheet
-          </span>
-          <h2 className="text-xl font-black text-sky-950 mt-1 font-display print:text-lg">{moduleTitle}</h2>
-          <p className="text-sm text-sky-500 font-bold font-display print:text-[10px]">{moduleSubtitle}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black uppercase tracking-widest bg-sky-100 text-sky-700 px-3 py-1 rounded-full print:bg-slate-100 print:text-slate-900 print:border print:border-slate-800 font-mono">
+              FINKID ACADEMY • {moduleCategory.toUpperCase()} WORKSHEET
+            </span>
+            {showAnswerKey && (
+              <span className="hidden print:inline-block text-xs font-black uppercase tracking-widest bg-emerald-100 text-emerald-800 border border-emerald-800 px-2.5 py-0.5 rounded-full font-mono">
+                TEACHER ANSWER KEY
+              </span>
+            )}
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-sky-950 mt-2 font-display print:text-xl print:text-black print:font-extrabold">{moduleTitle}</h2>
+          <p className="text-sm text-sky-500 font-bold font-display print:text-xs print:text-slate-700">{moduleSubtitle}</p>
         </div>
         <div className="flex items-center gap-2 print:hidden shrink-0">
           <button
@@ -450,78 +457,102 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-black text-sm shadow-md transition-all active:scale-95"
           >
             <Printer className="w-3.5 h-3.5" />
-            Print
+            Print Worksheet
           </button>
         </div>
       </div>
 
       {/* Classroom header inputs for printing */}
-      <div className="grid grid-cols-2 gap-4 bg-sky-50/50 p-4 rounded-2xl border border-sky-100/50 print:bg-transparent print:border-gray-300 print:py-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-sky-50/50 p-4 rounded-2xl border border-sky-100/50 print:grid-cols-3 print:bg-transparent print:border-0 print:p-0 print:mb-4">
         <div className="space-y-1">
-          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-gray-500">Student Name:</label>
+          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-slate-900 print:text-[10px] block">Student Name:</label>
           <input
             type="text"
             placeholder="Write name here..."
-            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 placeholder:text-slate-300 focus:outline-sky-400 print:border-b print:border-t-0 print:border-x-0 print:rounded-none print:p-0"
+            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 placeholder:text-slate-300 focus:outline-sky-400 print:border-0 print:border-b-2 print:border-slate-800 print:rounded-none print:p-0 print:text-slate-900 print:font-bold"
           />
         </div>
         <div className="space-y-1">
-          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-gray-500">Date:</label>
+          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-slate-900 print:text-[10px] block">Date:</label>
           <input
             type="text"
             defaultValue={new Date().toLocaleDateString()}
-            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 focus:outline-sky-400 print:border-b print:border-t-0 print:border-x-0 print:rounded-none print:p-0"
+            className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 focus:outline-sky-400 print:border-0 print:border-b-2 print:border-slate-800 print:rounded-none print:p-0 print:text-slate-900 print:font-bold"
           />
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs font-black uppercase text-sky-600 font-display print:text-slate-900 print:text-[10px] block">Score / Grade:</label>
+          <div className="w-full bg-white border border-sky-100 rounded-xl px-3 py-1.5 text-sm font-bold text-sky-950 print:border-0 print:border-b-2 print:border-slate-800 print:rounded-none print:p-0 print:text-slate-900">
+            _____ / 100
+          </div>
         </div>
       </div>
 
       {/* Questions list */}
-      <div className="space-y-6 pt-2">
+      <div className="space-y-6 pt-2 print:space-y-5 print:pt-0">
         {questions.map((q, idx) => {
           const isCorrect = checkedAnswers[q.id];
           return (
-            <div key={q.id} className="space-y-2.5 print:break-inside-avoid">
-              <p className="text-sm sm:text-base font-black text-sky-950 leading-relaxed font-display flex gap-2">
-                <span className="bg-sky-100 text-sky-800 w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-xs font-black">
-                  Q{idx + 1}
+            <div key={q.id} className="space-y-2.5 print:break-inside-avoid print:mb-5 print:pb-3 print:border-b print:border-slate-200">
+              <p className="text-sm sm:text-base font-black text-sky-950 leading-relaxed font-display flex gap-2.5 print:text-slate-900 print:text-sm">
+                <span className="bg-sky-100 text-sky-800 w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs font-black print:bg-slate-200 print:text-slate-900 print:border print:border-slate-800">
+                  {idx + 1}
                 </span>
-                {q.question}
+                <span>{q.question}</span>
               </p>
 
               {q.type === "choice" ? (
-                <div className="grid grid-cols-1 gap-2 pl-7">
+                <div className="grid grid-cols-1 gap-2 pl-8 print:pl-6 print:space-y-1.5">
                   {q.options?.map((opt) => {
                     const isSelected = answers[q.id] === opt;
                     return (
                       <button
                         key={opt}
                         onClick={() => handleInputChange(q.id, opt)}
-                        className={`text-left px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all print:border print:bg-transparent ${
+                        className={`text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all flex items-start gap-3 print:border-slate-300 print:bg-white print:p-2 print:rounded-lg ${
                           isSelected
-                            ? "bg-sky-100 border-sky-400 text-sky-900 font-bold"
+                            ? "bg-sky-100 border-sky-400 text-sky-900 font-bold print:font-bold print:bg-slate-100"
                             : "bg-slate-50 hover:bg-slate-100 border-slate-100 text-slate-600"
                         }`}
                       >
-                        {opt}
+                        <span className={`w-4 h-4 rounded-full border-2 border-slate-400 mt-0.5 flex items-center justify-center text-[10px] shrink-0 print:border-slate-800 ${isSelected ? "bg-sky-500 border-sky-500 text-white font-bold print:bg-slate-900 print:text-white" : ""}`}>
+                          {isSelected ? "✓" : ""}
+                        </span>
+                        <span className="print:text-slate-900 print:text-xs print:font-medium">{opt}</span>
                       </button>
                     );
                   })}
                 </div>
               ) : (
-                <div className="pl-7">
+                <div className="pl-8 print:pl-6 space-y-2">
                   <textarea
                     rows={2}
                     value={answers[q.id] || ""}
                     onChange={(e) => handleInputChange(q.id, e.target.value)}
                     placeholder="Type your answer explanation here..."
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-sky-400 print:border print:bg-white print:p-2"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-sky-400 print:hidden"
                   />
+
+                  {/* Print Typed Answer Box */}
+                  {answers[q.id] ? (
+                    <div className="hidden print:block p-3 border border-slate-300 rounded-lg text-xs font-medium text-slate-900 bg-slate-50">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Student Answer:</p>
+                      <p>{answers[q.id]}</p>
+                    </div>
+                  ) : null}
+
+                  {/* Print Lined Writing Area */}
+                  <div className="hidden print:block space-y-3 pt-1">
+                    <div className="border-b border-dashed border-slate-400 h-5" />
+                    <div className="border-b border-dashed border-slate-400 h-5" />
+                    <div className="border-b border-dashed border-slate-400 h-5" />
+                  </div>
                 </div>
               )}
 
               {/* Verified Feedback / Success marker */}
               {celebrated && answers[q.id] && (
-                <div className="pl-7 flex items-center gap-1.5 text-xs font-black">
+                <div className="pl-8 flex items-center gap-1.5 text-xs font-black print:hidden">
                   {isCorrect ? (
                     <span className="text-emerald-600 flex items-center gap-1">
                       <CheckCircle className="w-3.5 h-3.5" /> Checked! Stellar analysis.
@@ -540,12 +571,12 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
 
               {/* Answer Key Override */}
               {(showAnswerKey || (celebrated && !isCorrect && q.type === "choice")) && (
-                <div className="pl-7 pr-4 py-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-sm text-emerald-800 space-y-1 print:bg-transparent print:border-gray-200">
-                  <p className="font-extrabold flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    Correct Key: <span className="font-black underline">{q.correctAnswer}</span>
+                <div className="pl-8 pr-4 py-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-sm text-emerald-800 space-y-1 print:bg-slate-50 print:border-slate-800 print:text-black print:p-2.5 print:rounded-lg">
+                  <p className="font-extrabold flex items-center gap-1.5 print:text-xs">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 print:text-slate-800" />
+                    Correct Answer: <span className="font-black underline">{q.correctAnswer}</span>
                   </p>
-                  <p className="text-xs text-emerald-700/95 font-medium leading-normal">
+                  <p className="text-xs text-emerald-700/95 font-medium leading-normal print:text-slate-700 print:text-[11px]">
                     {q.explanation}
                   </p>
                 </div>
@@ -572,6 +603,11 @@ export default function ModuleWorksheet({ moduleId, moduleTitle, moduleSubtitle,
             </span>
           </div>
         )}
+      </div>
+
+      {/* Print Footer Notice */}
+      <div className="hidden print:block pt-4 border-t border-slate-300 text-center text-[10px] text-slate-500 font-mono">
+        FinKid Academy Financial Literacy Curriculum • www.finkidacademy.com • Module Worksheet
       </div>
 
     </div>
