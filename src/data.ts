@@ -23,10 +23,10 @@ export const MODULES: Module[] = [
         question: "What is the main problem with bartering (trading items directly)?",
         options: [
           "Items are always too clean to trade.",
-          "You must find someone who has what you want AND wants what you have.",
-          "Everyone only wants to trade for pet lizards."
+          "Everyone only wants to trade for pet lizards.",
+          "You must find someone who has what you want AND wants what you have."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "This is called the 'double coincidence of wants'. If you have apples and want a book, you have to find someone with a book who wants apples!"
       },
       {
@@ -55,22 +55,22 @@ export const MODULES: Module[] = [
         id: 4,
         question: "What is the 'double coincidence of wants'?",
         options: [
-          "When two people happen to want exactly what each other is trading.",
           "When you accidentally buy two of the exact same toy.",
-          "When a store has a buy-one-get-one-free deal."
+          "When a store has a buy-one-get-one-free deal.",
+          "When two people happen to want exactly what each other is trading."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 2,
         explanation: "The double coincidence of wants is the hard-to-find situation where two people have exactly what the other person desires to trade!"
       },
       {
         id: 5,
         question: "Why is paper cash better than gold coins for daily grocery shopping?",
         options: [
-          "Because cash has cool pictures of historic presidents.",
           "Because paper cash is much lighter, more compact, and easier to carry around.",
+          "Because cash has cool pictures of historic presidents.",
           "Because paper cash is waterproof and cannot be ripped."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Paper cash is incredibly light and easy to carry compared to heavy bags of metal coins, making everyday trades fast and simple!"
       }
     ]
@@ -96,11 +96,11 @@ export const MODULES: Module[] = [
         id: 1,
         question: "What is the difference between Gross Pay and Net Pay?",
         options: [
-          "Gross Pay is your take-home cash; Net Pay is eaten by spiders.",
           "Gross Pay is what you earn before taxes; Net Pay is what you actually take home.",
+          "Gross Pay is your take-home cash; Net Pay is eaten by spiders.",
           "Gross Pay is money earned on weekends; Net Pay is for weekdays."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Gross Pay is the total money you earned. Net Pay is your actual take-home pay after taxes and other deductions are subtracted!"
       },
       {
@@ -108,10 +108,10 @@ export const MODULES: Module[] = [
         question: "If you get paid an hourly wage, how do you earn more money on your paycheck?",
         options: [
           "Ask to work fewer hours.",
-          "Work more hours or earn a higher rate per hour.",
-          "Keep your fingers crossed and hope for the best."
+          "Keep your fingers crossed and hope for the best.",
+          "Work more hours or earn a higher rate per hour."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Hourly wages are calculated by multiplying your hourly rate by the number of hours you work. More hours = more money!"
       },
       {
@@ -141,10 +141,10 @@ export const MODULES: Module[] = [
         question: "What is 'human capital' and how can you increase it?",
         options: [
           "The number of friends you have on your favorite social app.",
-          "Your knowledge, skills, education, and experience; you increase it by learning!",
-          "The physical size of your brain."
+          "The physical size of your brain.",
+          "Your knowledge, skills, education, and experience; you increase it by learning!"
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Human capital is your personal set of skills, education, and health. Investing in your human capital through study and practice helps you qualify for higher-paying careers!"
       }
     ]
@@ -171,32 +171,32 @@ export const MODULES: Module[] = [
         question: "Which of these is a true 'Need'?",
         options: [
           "A brand new gaming console.",
-          "Basic food, water, and safe shelter.",
-          "Concert tickets to see your favorite band."
+          "Concert tickets to see your favorite band.",
+          "Basic food, water, and safe shelter."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Needs are things you absolutely require to survive. While games and concert tickets are fun, you don't need them to stay alive and healthy!"
       },
       {
         id: 2,
         question: "According to the popular 50/30/20 rule, where does the 30% of your budget go?",
         options: [
+          "Needs (rent, groceries, utilities).",
           "Wants (fun things, hobbies, and entertainment).",
-          "Savings (future goals and emergencies).",
-          "Needs (rent, groceries, utilities)."
+          "Savings (future goals and emergencies)."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 1,
         explanation: "The 50/30/20 rule splits your money: 50% for Needs, 30% for Wants (fun items), and 20% for Savings!"
       },
       {
         id: 3,
         question: "If your bicycle tire pops and costs $25 to replace, what should you do?",
         options: [
-          "Never ride a bike again.",
           "Use money from your Savings or Emergency Fund category.",
+          "Never ride a bike again.",
           "Buy 5 more bikes using a credit card."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Unexpected expenses (like repairs) are exactly why we keep a Savings/Emergency fund, so we don't have to panic or go into debt!"
       },
       {
@@ -204,21 +204,21 @@ export const MODULES: Module[] = [
         question: "If you spend all your money on a movie and snacks instead of buying your required school textbook, what did you fail to prioritize?",
         options: [
           "Your savings goals.",
-          "Your needs (things you must have for your responsibilities and survival).",
-          "Your wants (things that are just for fun)."
+          "Your wants (things that are just for fun).",
+          "Your needs (things you must have for your responsibilities and survival)."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Needs must always be paid for first! School books are a necessity for your education responsibility, while movies and snacks are fun wants."
       },
       {
         id: 5,
         question: "What does the '20' stand for in the 50/30/20 budget rule?",
         options: [
-          "20% goes towards fun hobbies and streaming services.",
           "20% goes towards savings, paying off debt, or investing for the future.",
+          "20% goes towards fun hobbies and streaming services.",
           "20% is given away as birthday gifts."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "The 20% slice is dedicated to savings and financial goals, helping you build a security net or prepare for big future purchases!"
       }
     ]
@@ -245,21 +245,21 @@ export const MODULES: Module[] = [
         question: "What is compound interest?",
         options: [
           "Interest that is extremely complicated to calculate.",
-          "Earning interest on your original savings PLUS on the interest you've already earned.",
-          "A fee you pay the bank for keeping your money."
+          "A fee you pay the bank for keeping your money.",
+          "Earning interest on your original savings PLUS on the interest you've already earned."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Compounding means you earn interest on your interest. It makes your money grow faster and faster like a snowball rolling downhill!"
       },
       {
         id: 2,
         question: "Why does starting to save at age 12 give you a massive advantage over starting at age 35?",
         options: [
-          "Because kids are naturally luckier.",
           "Your savings have many more years to compound and grow.",
+          "Because kids are naturally luckier.",
           "Older people are forbidden from having savings accounts."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Time is the secret ingredient of compounding. The more years your money has to grow, the more dramatic the snowball effect becomes!"
       },
       {
@@ -278,21 +278,21 @@ export const MODULES: Module[] = [
         question: "What is the 'principal' in a savings account?",
         options: [
           "The strict school director who watches over the local bank.",
-          "The initial sum of money you deposit before any interest is earned.",
-          "The paper document that proves the bank is real."
+          "The paper document that proves the bank is real.",
+          "The initial sum of money you deposit before any interest is earned."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "In finance, 'principal' is the original amount of money you put in. Interest is calculated as a percentage of this principal!"
       },
       {
         id: 5,
         question: "If you deposit $100 at a 10% annual interest rate, how much money do you have after 2 years with compound interest?",
         options: [
-          "$110",
           "$121",
+          "$110",
           "$115"
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Year 1: $100 + $10 interest = $110. Year 2: you earn 10% on the new $110, which is $11, making the total $121! That's compound magic!"
       }
     ]
@@ -318,11 +318,11 @@ export const MODULES: Module[] = [
         id: 1,
         question: "What is 'unit pricing'?",
         options: [
-          "The color of the box.",
           "The cost per unit of measure (like ounce, gram, or sheet) to easily compare values.",
+          "The color of the box.",
           "The price of buying exactly one truckload of items."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Unit pricing shows you how much an item costs per ounce or gram. It helps you see if a giant box is actually a better deal than a small one!"
       },
       {
@@ -330,10 +330,10 @@ export const MODULES: Module[] = [
         question: "If Brand A costs $4.00 for 16oz ($0.25/oz) and Brand B costs $6.00 for 30oz ($0.20/oz), which is the better bargain?",
         options: [
           "Brand A, because $4.00 is a smaller number.",
-          "Brand B, because it has a lower cost per ounce ($0.20/oz).",
-          "They are exactly the same."
+          "They are exactly the same.",
+          "Brand B, because it has a lower cost per ounce ($0.20/oz)."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Brand B gives you more food for every dollar spent. It costs less per ounce, making it the smarter buy!"
       },
       {
@@ -351,11 +351,11 @@ export const MODULES: Module[] = [
         id: 4,
         question: "Why is comparing the 'unit price' often more helpful than just looking at the retail price tag?",
         options: [
-          "Because the unit price is always printed in a prettier font.",
           "Because package sizes differ, and unit price reveals the actual cost per ounce or gram.",
+          "Because the unit price is always printed in a prettier font.",
           "Because unit pricing automatically subtracts tax."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Two boxes might look the same size, but one might have half the weight inside! Comparing unit price (like price per ounce) cuts through packaging tricks."
       },
       {
@@ -363,10 +363,10 @@ export const MODULES: Module[] = [
         question: "What is a 'loss leader' used by grocery stores?",
         options: [
           "An employee who loses keys often.",
-          "A popular item sold at a very low price (even losing money) to attract shoppers into the store.",
-          "A brand of milk that has expired."
+          "A brand of milk that has expired.",
+          "A popular item sold at a very low price (even losing money) to attract shoppers into the store."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Stores advertise super cheap items (like milk or bread) to get you in the door, hoping you'll buy plenty of regular-priced items while you're there!"
       }
     ]
@@ -393,21 +393,21 @@ export const MODULES: Module[] = [
         question: "What is the primary purpose of a checking account?",
         options: [
           "To lock up money until you turn 65.",
-          "To easily access your money for daily spending, debit card swipes, and checks.",
-          "To hide your gold bars from pirates."
+          "To hide your gold bars from pirates.",
+          "To easily access your money for daily spending, debit card swipes, and checks."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "A checking account is designed for everyday transactions. You can deposit money and immediately spend it using cards, mobile apps, or checks!"
       },
       {
         id: 2,
         question: "Why must you sign your name on the bottom right corner of a check?",
         options: [
-          "To prove you know how to write in cursive.",
           "To officially authorize and approve the bank to transfer those funds.",
+          "To prove you know how to write in cursive.",
           "Because checks look pretty with scribble drawings."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Your unique signature is your security seal. It lets the bank know that YOU are the account owner approving the payment."
       },
       {
@@ -415,10 +415,10 @@ export const MODULES: Module[] = [
         question: "What is a 9-digit routing number on a check?",
         options: [
           "The phone number of the store.",
-          "A special bank ID code that tells where your bank is located in the country.",
-          "Your private bank password."
+          "Your private bank password.",
+          "A special bank ID code that tells where your bank is located in the country."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "The routing number tells banking computers exactly which bank in the country holds your account, ensuring money routes to the correct destination."
       },
       {
@@ -467,43 +467,43 @@ export const MODULES: Module[] = [
         question: "What is a credit card?",
         options: [
           "A card that gives you free unlimited money from the government.",
-          "A card that lets you borrow money from a bank to buy things, which you must pay back.",
-          "An identity card for arcade centers."
+          "An identity card for arcade centers.",
+          "A card that lets you borrow money from a bank to buy things, which you must pay back."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Credit cards are NOT free money! You are borrowing money from the card issuer to buy things, and you must pay them back when the bill arrives."
       },
       {
         id: 2,
         question: "What happens if you only pay the tiny 'Minimum Payment' on a credit card bill?",
         options: [
-          "The bank rewards you with free cupcakes.",
           "You pay high interest on the remaining balance, and your debt grows and lasts for years!",
+          "The bank rewards you with free cupcakes.",
           "Absolutely nothing; you saved money."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "If you don't pay the full bill, high-interest charges are added to what you owe. Your balance grows, and you end up paying double or triple the original price!"
       },
       {
         id: 3,
         question: "What is a Credit Score?",
         options: [
-          "A grade showing how reliable you are at paying back borrowed money.",
           "Your high score in a banking video game.",
-          "The amount of physical money in your wallet."
+          "The amount of physical money in your wallet.",
+          "A grade showing how reliable you are at paying back borrowed money."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 2,
         explanation: "A credit score is like a financial GPA. It tells lenders how reliable you are at paying back debt. High scores make borrowing cheaper and easier!"
       },
       {
         id: 4,
         question: "How can you build and maintain a high, excellent credit score?",
         options: [
-          "By buying as many video games as possible on credit cards.",
           "By paying your bills on time, keeping debt low, and only borrowing what you can afford.",
+          "By buying as many video games as possible on credit cards.",
           "By keeping your money in a shoe box instead of a bank."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "The single best way to build great credit is to pay every bill on time and keep your credit card balances very low relative to your limits!"
       },
       {
@@ -511,10 +511,10 @@ export const MODULES: Module[] = [
         question: "What is 'APR' on a credit card?",
         options: [
           "Automatic Payment Refund, which returns your money.",
-          "Annual Percentage Rate, which is the yearly interest cost charged on unpaid debt.",
-          "A special credit card for the month of April."
+          "A special credit card for the month of April.",
+          "Annual Percentage Rate, which is the yearly interest cost charged on unpaid debt."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "APR stands for Annual Percentage Rate. It is the yearly cost of interest you have to pay if you carry a balance on your credit card!"
       }
     ]
@@ -540,33 +540,33 @@ export const MODULES: Module[] = [
         id: 1,
         question: "What is a share of stock?",
         options: [
-          "A ticket to watch a movie about finance.",
           "A tiny, real piece of ownership in a public company.",
+          "A ticket to watch a movie about finance.",
           "A loan you make to a small local charity."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "When you buy a stock, you become a 'shareholder'—which means you own a micro-fraction of that company!"
       },
       {
         id: 2,
         question: "Why do stock prices fluctuate (go up and down)?",
         options: [
-          "They change based on company performance, news, and buyer/seller demand.",
           "They change depending on the weather in Antarctica.",
-          "They only go up, never down."
+          "They only go up, never down.",
+          "They change based on company performance, news, and buyer/seller demand."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 2,
         explanation: "Stock prices are determined by supply and demand. Good news makes more people want to buy, which drives the price up. Bad news does the opposite!"
       },
       {
         id: 3,
         question: "What is 'Diversification' in investing?",
         options: [
-          "Putting all of your money into one single trendy stock.",
           "Spreading your money across many different investments to lower risk.",
+          "Putting all of your money into one single trendy stock.",
           "Withdrawing all your cash to hide in a tree."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Diversification is the golden rule of investing: 'Don't put all your eggs in one basket!' If one company fails, your other investments protect you."
       },
       {
@@ -574,21 +574,21 @@ export const MODULES: Module[] = [
         question: "What is a 'dividend' paid by some companies?",
         options: [
           "A math operation taught in high school.",
-          "A portion of a company's profits paid directly back to its shareholders as cash.",
-          "A tax paid to the local city council."
+          "A tax paid to the local city council.",
+          "A portion of a company's profits paid directly back to its shareholders as cash."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Some successful, stable companies share their earnings by sending regular cash payments (dividends) directly to their stock owners!"
       },
       {
         id: 5,
         question: "What is the difference between a 'Bull Market' and a 'Bear Market'?",
         options: [
-          "A Bull Market means prices are rising; a Bear Market means prices are falling.",
           "A Bull Market is only for farming companies; a Bear Market is for honey companies.",
+          "A Bull Market means prices are rising; a Bear Market means prices are falling.",
           "They are named after the favorite pets of the stock exchange president."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 1,
         explanation: "A Bull market charges ahead with rising stock prices and strong investor confidence. A Bear market hibernates with falling stock prices!"
       }
     ]
@@ -615,54 +615,54 @@ export const MODULES: Module[] = [
         question: "Where do taxes deducted from your paycheck actually go?",
         options: [
           "They are destroyed and thrown away.",
-          "To the government to pay for public goods like schools, parks, and roads.",
-          "Directly to the bank's secret prize vault."
+          "Directly to the bank's secret prize vault.",
+          "To the government to pay for public goods like schools, parks, and roads."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Taxes are pooled together to pay for shared public services that benefit everyone, such as police, libraries, highways, and national parks."
       },
       {
         id: 2,
         question: "Which of these is typically funded by local sales or property taxes?",
         options: [
-          "Private vacation tickets for city officials.",
           "Public fire departments, public schools, and community playgrounds.",
+          "Private vacation tickets for city officials.",
           "Sweets and snacks at local grocery stores."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Local property and sales taxes are used directly in your community to fund schools, maintain city roads, and pay our local heroes like firefighters!"
       },
       {
         id: 3,
         question: "What is FICA on a paycheck stub?",
         options: [
-          "A tax that funds Social Security (retirement) and Medicare (healthcare for seniors).",
           "A bonus coupon for arcade games.",
+          "A tax that funds Social Security (retirement) and Medicare (healthcare for seniors).",
           "The name of the company owner."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 1,
         explanation: "FICA is the Federal Insurance Contributions Act. It's a special tax that is put away to help pay for retirement and medical care for seniors and people with disabilities!"
       },
       {
         id: 4,
         question: "What is 'progressive taxation'?",
         options: [
-          "A tax system where tax rates increase as your income increases.",
           "A tax that only applies to high-tech companies.",
-          "A tax system that changes every month."
+          "A tax system that changes every month.",
+          "A tax system where tax rates increase as your income increases."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 2,
         explanation: "In a progressive tax system, people with higher incomes pay a higher percentage rate of tax, ensuring those who make more contribute a larger share to public resources."
       },
       {
         id: 5,
         question: "What is a W-2 form?",
         options: [
-          "A permission slip to work on weekends.",
           "An annual tax form showing your total earnings and the taxes withheld from your pay.",
+          "A permission slip to work on weekends.",
           "A form used to open a new checking account."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Every January, employers send workers a W-2 form. It summarizes exactly how much you earned and how much tax you paid the previous year, which is crucial for filling out tax returns!"
       }
     ]
@@ -689,32 +689,32 @@ export const MODULES: Module[] = [
         question: "What does the word 'Philanthropy' mean?",
         options: [
           "The study of ancient giant dinosaurs.",
-          "Giving money, items, time, or skills to help others and do good in the world.",
-          "Printing paper money at high speeds."
+          "Printing paper money at high speeds.",
+          "Giving money, items, time, or skills to help others and do good in the world."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Philanthropy is about generosity. It's the active desire to help others, whether through money, donating toys, or volunteering your hours!"
       },
       {
         id: 2,
         question: "Why do people and businesses choose to donate to charity?",
         options: [
-          "To make the community stronger, healthier, and support causes they care about.",
           "Because they are forced to do so by local banks.",
+          "To make the community stronger, healthier, and support causes they care about.",
           "Simply to get rid of heavy paper bills."
         ],
-        correctAnswerIndex: 0,
+        correctAnswerIndex: 1,
         explanation: "Donating helps charities feed the hungry, rescue stray animals, heal patients, and protect nature, creating a safer and happier world for all."
       },
       {
         id: 3,
         question: "How can a middle school student practice philanthropy if they don't have any money to give?",
         options: [
-          "They cannot participate at all.",
           "Volunteer time at a local shelter, donate old books/toys, or help a neighbor.",
+          "They cannot participate at all.",
           "Borrow massive sums of credit card debt to donate."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "Philanthropy is about your heart! Donating gently used clothes, books, toys, or volunteering your time to help clean a park are all incredible ways to give back!"
       },
       {
@@ -722,21 +722,21 @@ export const MODULES: Module[] = [
         question: "What is a 'nonprofit organization' or charity?",
         options: [
           "A business that has failed and makes no sales.",
-          "An organization set up to help the public or a cause, where all money goes back to that mission instead of making owners rich.",
-          "A bank that doesn't charge interest."
+          "A bank that doesn't charge interest.",
+          "An organization set up to help the public or a cause, where all money goes back to that mission instead of making owners rich."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation: "Nonprofit organizations focus entirely on public benefit or helping a specific cause. They do not have private owners earning profits; all extra funds go to their charitable work!"
       },
       {
         id: 5,
         question: "What is an 'endowment'?",
         options: [
-          "An annual tax paid on wild animals.",
           "A donated fund of money that is kept and invested, so the interest can support a charity forever.",
+          "An annual tax paid on wild animals.",
           "The act of buying a large public building."
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation: "An endowment is a financial gift invested to grow over time. The charity only spends the earned investment returns, ensuring the gift funds their mission forever!"
       }
     ]
