@@ -2794,21 +2794,113 @@ export default function ModuleInteractive({ module, onComplete, userCoins }: Mod
               </div>
 
               {/* Visual City sandbox */}
-              <div className="bg-slate-900 border-2 border-slate-800 rounded-xl p-5 shadow-inner flex flex-col items-center justify-center text-center space-y-4 text-white min-h-[250px] relative">
-                <span className="text-xs font-black tracking-widest text-slate-400 uppercase absolute top-4 left-4">City Grid</span>
+              <div className="bg-slate-900 border-2 border-slate-800 rounded-xl p-5 shadow-inner flex flex-col items-center justify-between text-center space-y-4 text-white min-h-[290px]">
+                <div className="w-full flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="text-[11px] font-black tracking-widest text-slate-400 uppercase">City Grid</span>
+                  <span className="text-[10px] font-bold text-slate-300 bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700">
+                    {Object.values(gameState.allocated || {}).filter((v: any) => Number(v) > 0).length} / 4 Funded
+                  </span>
+                </div>
                 
-                <div className="grid grid-cols-2 gap-4 w-full max-w-[200px]">
-                  <div className={`p-4 rounded-xl border border-slate-800/80 transition-all ${gameState.allocated?.schools > 0 ? "bg-blue-900/40 border-blue-500 text-2xl" : "bg-slate-800/20 text-slate-600 text-xl"}`}>
-                    🏫 {gameState.allocated?.schools > 0 ? "School Active!" : "Locked"}
+                <div className="grid grid-cols-2 gap-3 w-full max-w-[280px]">
+                  {/* Public School */}
+                  <div
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-300 min-h-[95px] text-center ${
+                      (gameState.allocated?.schools || 0) > 0
+                        ? "bg-blue-950/60 border-blue-400 text-blue-100 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                        : "bg-slate-800/30 border-slate-800 text-slate-500"
+                    }`}
+                  >
+                    <span className={`text-2xl mb-1 transition-transform ${gameState.allocated?.schools > 0 ? "scale-110" : "grayscale opacity-40"}`}>
+                      🏫
+                    </span>
+                    <span className={`text-xs font-bold leading-tight ${gameState.allocated?.schools > 0 ? "text-white" : "text-slate-500"}`}>
+                      {gameState.allocated?.schools > 0 ? "School Active!" : "School"}
+                    </span>
+                    <span
+                      className={`mt-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded border ${
+                        gameState.allocated?.schools > 0
+                          ? "bg-blue-500/20 text-blue-300 border-blue-400/40"
+                          : "bg-slate-800/60 text-slate-500 border-slate-700/50"
+                      }`}
+                    >
+                      {gameState.allocated?.schools > 0 ? "Active" : "Locked"}
+                    </span>
                   </div>
-                  <div className={`p-4 rounded-xl border border-slate-800/80 transition-all ${gameState.allocated?.parks > 0 ? "bg-emerald-900/40 border-emerald-500 text-2xl" : "bg-slate-800/20 text-slate-600 text-xl"}`}>
-                    🌲 {gameState.allocated?.parks > 0 ? "Park Planted!" : "Locked"}
+
+                  {/* City Parks */}
+                  <div
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-300 min-h-[95px] text-center ${
+                      (gameState.allocated?.parks || 0) > 0
+                        ? "bg-emerald-950/60 border-emerald-400 text-emerald-100 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                        : "bg-slate-800/30 border-slate-800 text-slate-500"
+                    }`}
+                  >
+                    <span className={`text-2xl mb-1 transition-transform ${gameState.allocated?.parks > 0 ? "scale-110" : "grayscale opacity-40"}`}>
+                      🌲
+                    </span>
+                    <span className={`text-xs font-bold leading-tight ${gameState.allocated?.parks > 0 ? "text-white" : "text-slate-500"}`}>
+                      {gameState.allocated?.parks > 0 ? "Park Planted!" : "Parks"}
+                    </span>
+                    <span
+                      className={`mt-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded border ${
+                        gameState.allocated?.parks > 0
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40"
+                          : "bg-slate-800/60 text-slate-500 border-slate-700/50"
+                      }`}
+                    >
+                      {gameState.allocated?.parks > 0 ? "Planted" : "Locked"}
+                    </span>
                   </div>
-                  <div className={`p-4 rounded-xl border border-slate-800/80 transition-all ${gameState.allocated?.roads > 0 ? "bg-amber-900/40 border-amber-500 text-2xl" : "bg-slate-800/20 text-slate-600 text-xl"}`}>
-                    🛣️ {gameState.allocated?.roads > 0 ? "Road Paved!" : "Locked"}
+
+                  {/* Roads & Bridges */}
+                  <div
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-300 min-h-[95px] text-center ${
+                      (gameState.allocated?.roads || 0) > 0
+                        ? "bg-amber-950/60 border-amber-400 text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                        : "bg-slate-800/30 border-slate-800 text-slate-500"
+                    }`}
+                  >
+                    <span className={`text-2xl mb-1 transition-transform ${gameState.allocated?.roads > 0 ? "scale-110" : "grayscale opacity-40"}`}>
+                      🛣️
+                    </span>
+                    <span className={`text-xs font-bold leading-tight ${gameState.allocated?.roads > 0 ? "text-white" : "text-slate-500"}`}>
+                      {gameState.allocated?.roads > 0 ? "Road Paved!" : "Roads"}
+                    </span>
+                    <span
+                      className={`mt-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded border ${
+                        gameState.allocated?.roads > 0
+                          ? "bg-amber-500/20 text-amber-300 border-amber-400/40"
+                          : "bg-slate-800/60 text-slate-500 border-slate-700/50"
+                      }`}
+                    >
+                      {gameState.allocated?.roads > 0 ? "Paved" : "Locked"}
+                    </span>
                   </div>
-                  <div className={`p-4 rounded-xl border border-slate-800/80 transition-all ${gameState.allocated?.fire > 0 ? "bg-rose-900/40 border-rose-500 text-2xl" : "bg-slate-800/20 text-slate-600 text-xl"}`}>
-                    🚒 {gameState.allocated?.fire > 0 ? "Fire Station!" : "Locked"}
+
+                  {/* Fire & Safety */}
+                  <div
+                    className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-300 min-h-[95px] text-center ${
+                      (gameState.allocated?.fire || 0) > 0
+                        ? "bg-rose-950/60 border-rose-400 text-rose-100 shadow-[0_0_15px_rgba(244,63,94,0.2)]"
+                        : "bg-slate-800/30 border-slate-800 text-slate-500"
+                    }`}
+                  >
+                    <span className={`text-2xl mb-1 transition-transform ${gameState.allocated?.fire > 0 ? "scale-110" : "grayscale opacity-40"}`}>
+                      🚒
+                    </span>
+                    <span className={`text-xs font-bold leading-tight ${gameState.allocated?.fire > 0 ? "text-white" : "text-slate-500"}`}>
+                      {gameState.allocated?.fire > 0 ? "Fire Station!" : "Fire Station"}
+                    </span>
+                    <span
+                      className={`mt-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded border ${
+                        gameState.allocated?.fire > 0
+                          ? "bg-rose-500/20 text-rose-300 border-rose-400/40"
+                          : "bg-slate-800/60 text-slate-500 border-slate-700/50"
+                      }`}
+                    >
+                      {gameState.allocated?.fire > 0 ? "Ready" : "Locked"}
+                    </span>
                   </div>
                 </div>
 
