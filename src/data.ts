@@ -72,6 +72,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "Paper cash is incredibly light and easy to carry compared to heavy bags of metal coins, making everyday trades fast and simple!"
+      },
+      {
+        id: 6,
+        question: "Which of these is NOT one of the 3 primary functions of money in economics?",
+        options: [
+          "A medium of exchange to buy goods.",
+          "A delicious snack for when you are hungry.",
+          "A store of value to save purchasing power."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "The 3 core functions of money are: Medium of Exchange, Store of Value, and Unit of Account. Money is definitely not for eating!"
+      },
+      {
+        id: 7,
+        question: "What gave early paper certificates and bank notes their value when first invented?",
+        options: [
+          "They were backed by real gold or silver stored safely in bank vaults.",
+          "They were made out of solid chocolate.",
+          "They could be traded for magical wishes."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Early paper banknotes were promises that could be traded at the bank for actual physical gold or silver coins stored in vaults!"
+      },
+      {
+        id: 8,
+        question: "Why is money called a 'store of value'?",
+        options: [
+          "Because it must be physically locked inside a grocery store.",
+          "It allows you to save purchasing power today and spend it safely in the future.",
+          "Because its value disappears after 24 hours."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Unlike perishable goods (like bananas that rot), money holds its value over time so you can save and spend it whenever you need!"
       }
     ]
   },
@@ -146,6 +179,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 2,
         explanation: "Human capital is your personal set of skills, education, and health. Investing in your human capital through study and practice helps you qualify for higher-paying careers!"
+      },
+      {
+        id: 6,
+        question: "If an employer offers 'overtime pay' at 1.5x regular pay ($16/hr base), how much is earned per overtime hour?",
+        options: [
+          "$24 per hour ($16 x 1.5).",
+          "$16 per hour.",
+          "$32 per hour."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Overtime pay (often called 'time and a half') multiplies your base hourly rate by 1.5 ($16 x 1.5 = $24) for hours worked beyond the standard 40-hour work week!"
+      },
+      {
+        id: 7,
+        question: "What is 'passive income'?",
+        options: [
+          "Money earned from doing intense manual yard work every day.",
+          "Income received automatically with little active daily effort, like royalties or investment dividends.",
+          "Money borrowed from your best friend."
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Passive income is money earned on an ongoing basis from assets you created or bought (like writing a book, creating an app, or investments) without working hourly!"
+      },
+      {
+        id: 8,
+        question: "Which of the following is considered an employee benefit or workplace perk?",
+        options: [
+          "Health insurance and paid vacation days.",
+          "A fine for showing up to work on time.",
+          "A requirement to clean the entire office building alone."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Employee benefits (like health coverage, retirement matching, and paid time off) are valuable forms of compensation added to your regular paycheck!"
       }
     ]
   },
@@ -220,6 +286,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "The 20% slice is dedicated to savings and financial goals, helping you build a security net or prepare for big future purchases!"
+      },
+      {
+        id: 6,
+        question: "What is an 'Emergency Fund' and how much should you aim to save in it as an adult?",
+        options: [
+          "3 to 6 months of essential living expenses saved for emergencies.",
+          "Exactly $5 kept inside an envelope.",
+          "One year's worth of candy and movie tickets."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "An emergency fund protects you against sudden life surprises (like car repairs or medical bills). Financial experts recommend keeping 3 to 6 months of basic expenses safe!"
+      },
+      {
+        id: 7,
+        question: "Why is creating a budget before you receive your income better than just tracking spending afterward?",
+        options: [
+          "It forces you to give every single dollar a job before you are tempted to spend it.",
+          "It makes your bank balance magically double overnight.",
+          "It is required by federal law for teenagers."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Proactive budgeting gives you control of your money before you spend it, ensuring you hit your savings goals and cover all necessities first!"
+      },
+      {
+        id: 8,
+        question: "Which of the following is an example of a 'Fixed Expense' in a monthly budget?",
+        options: [
+          "Monthly rent or bus pass that stays the exact same price every month.",
+          "Dining out at fancy restaurants on weekends.",
+          "Buying seasonal video games during holiday sales."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Fixed expenses are predictable costs that remain the same each billing cycle (like rent or flat-rate insurance), making them easy to plan for in advance!"
       }
     ]
   },
@@ -294,6 +393,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "Year 1: $100 + $10 interest = $110. Year 2: you earn 10% on the new $110, which is $11, making the total $121! That's compound magic!"
+      },
+      {
+        id: 6,
+        question: "What is the 'Rule of 72' used for in financial math?",
+        options: [
+          "A mental shortcut to estimate how many years it takes your money to double at a given interest rate.",
+          "A rule that you must save for exactly 72 weeks.",
+          "The maximum number of dollars you can keep in a piggy bank."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Divide 72 by your annual interest rate (e.g., 72 / 8% = 9 years) to find out roughly how many years it takes for your investment to double!"
+      },
+      {
+        id: 7,
+        question: "What does APY stand for on a bank savings account?",
+        options: [
+          "Annual Percentage Yield, showing total interest earned over a year with compounding.",
+          "Automatic Piggybank Yearly score.",
+          "Amount Paid to You on your birthday."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "APY (Annual Percentage Yield) reflects the real rate of return on your deposit, taking into account the effect of compounding interest over a full year!"
+      },
+      {
+        id: 8,
+        question: "What happens to cash kept under a mattress for 25 years without earning interest?",
+        options: [
+          "It loses purchasing power due to inflation as prices for everyday goods rise.",
+          "It automatically multiplies into gold coins.",
+          "The bills transform into new paper currency."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Inflation causes prices of goods to rise over time. Money sitting idle without interest loses its buying power over decades!"
       }
     ]
   },
@@ -368,6 +500,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 2,
         explanation: "Stores advertise super cheap items (like milk or bread) to get you in the door, hoping you'll buy plenty of regular-priced items while you're there!"
+      },
+      {
+        id: 6,
+        question: "Why do grocery stores frequently put staple goods like milk and eggs at the far back wall?",
+        options: [
+          "So shoppers must walk past aisles filled with tempting snacks and impulse goods.",
+          "Because cows and chickens are kept in the back parking lot.",
+          "To keep milk warm near the heaters."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Store layout psychology! Placing everyday essentials in the back ensures shoppers traverse the entire store, increasing the chance of extra purchases."
+      },
+      {
+        id: 7,
+        question: "What is 'shrinkflation'?",
+        options: [
+          "When a manufacturer reduces product size or quantity while keeping the price unchanged.",
+          "When clothes shrink in the washing machine.",
+          "When stores give discounts for smaller shoes."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Shrinkflation is a subtle form of inflation where a company keeps the sticker price identical but reduces the ounces or grams inside the package!"
+      },
+      {
+        id: 8,
+        question: "Why are store-brand (generic) items usually significantly cheaper than name-brand items?",
+        options: [
+          "Store brands spend far less money on national TV ads, marketing, and celebrity endorsements.",
+          "Store brands are made of cardboard.",
+          "Generic items are missing ingredients."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Store brands often share the exact same manufacturing facilities as big name brands, but cost 20-30% less because they don't have massive ad budgets!"
       }
     ]
   },
@@ -442,6 +607,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "With a debit card, you spend your own money instantly from your checking account. With a credit card, you are borrowing money from the bank and will receive a bill later."
+      },
+      {
+        id: 6,
+        question: "What is FDIC insurance in banking?",
+        options: [
+          "A federal government guarantee that protects deposits up to $250,000 if the bank fails.",
+          "An insurance policy on video games.",
+          "A fee charged to enter a bank lobby."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "The Federal Deposit Insurance Corporation (FDIC) backs member bank accounts up to $250,000 per depositor, keeping your savings completely secure!"
+      },
+      {
+        id: 7,
+        question: "What is an 'overdraft fee'?",
+        options: [
+          "A penalty fee charged by a bank when you spend more money than you have in your account.",
+          "A bonus reward for making multiple deposits.",
+          "A discount code for bank checks."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "An overdraft fee happens when your account balance goes below $0 and the bank covers the transaction for you, usually charging a steep penalty fee (e.g. $35)!"
+      },
+      {
+        id: 8,
+        question: "What is the 'Memo Line' on a paper check used for?",
+        options: [
+          "Writing a short note or reminder explaining what the payment was for.",
+          "Writing secret riddles for the bank teller.",
+          "Drawing pictures of bank vaults."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "The memo line helps both you and the recipient keep track of the purpose of the check, like writing 'October Rent' or 'Soccer Uniform'!"
       }
     ]
   },
@@ -516,6 +714,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 2,
         explanation: "APR stands for Annual Percentage Rate. It is the yearly cost of interest you have to pay if you carry a balance on your credit card!"
+      },
+      {
+        id: 6,
+        question: "What is the standard score range for a FICO Credit Score?",
+        options: [
+          "300 to 850 (with 750+ considered excellent).",
+          "0 to 100 points.",
+          "1,000 to 10,000 points."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Standard credit scores run from 300 to 850. Scores above 740+ help you qualify for the lowest interest rates and best loan terms!"
+      },
+      {
+        id: 7,
+        question: "What is 'collateral' on a secured loan (like a car loan or mortgage)?",
+        options: [
+          "A valuable property or asset the lender can reclaim if the borrower fails to repay the debt.",
+          "A free gift card given to loan applicants.",
+          "A special signature on your checkbook."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Collateral is security pledged for a loan. If you don't make your payments on a car loan, the lender has the legal right to repossess the car."
+      },
+      {
+        id: 8,
+        question: "Why is carrying high-interest credit card debt for luxury purchases dangerous?",
+        options: [
+          "Because high interest compounds against you, turning a $100 purchase into hundreds of dollars in debt.",
+          "Because credit cards expire after 3 days.",
+          "Because banks confiscate your wallet."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Credit card APRs are often 20% to 28%! When you carry a balance on depreciating luxury goods, compounding interest works against you like a runaway monster."
       }
     ]
   },
@@ -590,6 +821,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 1,
         explanation: "A Bull market charges ahead with rising stock prices and strong investor confidence. A Bear market hibernates with falling stock prices!"
+      },
+      {
+        id: 6,
+        question: "What is an Index Fund or ETF (Exchange Traded Fund)?",
+        options: [
+          "A single investment that bundles hundreds of different company stocks together to spread risk.",
+          "A government lottery ticket.",
+          "A loan you give to the local arcade."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "An index fund (like an S&P 500 fund) lets you invest in hundreds of top companies at once, giving you instant diversification with low fees!"
+      },
+      {
+        id: 7,
+        question: "What is a Stock Exchange (such as the NYSE or NASDAQ)?",
+        options: [
+          "An organized marketplace where buyers and sellers trade shares of public corporations.",
+          "A store where you exchange broken merchandise.",
+          "A bank that only accepts gold bars."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Stock exchanges are digital and physical hubs that connect investors worldwide to buy and sell company shares safely and transparently!"
+      },
+      {
+        id: 8,
+        question: "What does 'buy low and sell high' mean in stock investing?",
+        options: [
+          "Buying shares when the price is lower and selling them later when the value increases to earn a profit.",
+          "Buying stocks on tall buildings and selling them on the ground floor.",
+          "Purchasing shares only in the early morning."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "The core principle of capital gains: when you purchase shares at a bargain price and sell them at a higher valuation, the difference is your investment profit!"
       }
     ]
   },
@@ -664,6 +928,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "Every January, employers send workers a W-2 form. It summarizes exactly how much you earned and how much tax you paid the previous year, which is crucial for filling out tax returns!"
+      },
+      {
+        id: 6,
+        question: "What is 'Sales Tax' when purchasing an item in a store?",
+        options: [
+          "A percentage added by state or city governments to the retail price of goods and services.",
+          "A fee charged to use the shopping cart.",
+          "A discount applied on Mondays."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Sales tax is collected by retailers at the cash register on behalf of state and local governments to fund community services like road maintenance and police!"
+      },
+      {
+        id: 7,
+        question: "What is the role of the IRS (Internal Revenue Service) in the United States?",
+        options: [
+          "The federal agency responsible for collecting federal income taxes and administering tax laws.",
+          "A private company that manufactures dollar coins.",
+          "The international bank for rocket scientists."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "The IRS is the government bureau that processes tax returns, audits filings, and collects revenue used to fund federal government operations!"
+      },
+      {
+        id: 8,
+        question: "What is a 'Tax Deduction' or 'Tax Credit'?",
+        options: [
+          "An allowable reduction in your taxable income or total tax liability that lowers how much tax you owe.",
+          "A fine you pay for filing taxes too early.",
+          "A gift card given to tax accountants."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Tax deductions reduce your taxable income (e.g., student loan interest or charitable donations), saving you money on your tax bill!"
       }
     ]
   },
@@ -738,6 +1035,39 @@ export const MODULES: Module[] = [
         ],
         correctAnswerIndex: 0,
         explanation: "An endowment is a financial gift invested to grow over time. The charity only spends the earned investment returns, ensuring the gift funds their mission forever!"
+      },
+      {
+        id: 6,
+        question: "What is a 'Corporate Matching Gift' program?",
+        options: [
+          "When a company pledges to match (double) the charitable donations made by its employees.",
+          "When coworkers wear the exact same clothes to work.",
+          "A game played at company holiday parties."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Many generous employers double the impact of employee charity donations dollar-for-dollar through matching gift programs!"
+      },
+      {
+        id: 7,
+        question: "Why should donors research a charity or nonprofit before sending money?",
+        options: [
+          "To verify that the majority of donations go directly to program causes rather than excessive overhead or scams.",
+          "To check if the charity has a cool theme song.",
+          "Because donating to unapproved charities is illegal."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Using rating resources (like Charity Navigator) ensures your donations are managed transparently and used effectively to help real people and causes!"
+      },
+      {
+        id: 8,
+        question: "What is an 'In-Kind Donation'?",
+        options: [
+          "Donating physical goods, food, supplies, or professional services rather than cash.",
+          "A donation given with a polite thank you card.",
+          "A donation that must be repaid next year."
+        ],
+        correctAnswerIndex: 0,
+        explanation: "In-kind donations provide direct goods and services (like canned food for food pantries, clothes for shelters, or free medical care) instead of cash!"
       }
     ]
   }
